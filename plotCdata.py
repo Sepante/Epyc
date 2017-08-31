@@ -27,8 +27,13 @@ for i in range(len(qrange)):
         plt.plot(prange, data[:,i,j],'-.')
 """
 cmap = mpl.cm.rainbow
-for i in range(q_size):
-    for j in range(runNum):
-        plt.plot(prange, data[:,i,j],'o' , color=cmap(1/(i+1)) )
-        plt.show()
-        #plt.plot(prange, data[:,0,j], color=cmap(0.24) )
+for qindex in range(q_size):
+    q=qrange[qindex]
+    for run in range(runNum):
+        plt.plot(prange, data[:,qindex,run],'o' , color='b' )
+    #plt.suptitle("$2DGrid$ $ q= %.1f$, $N= %d$"%(q,n))
+    plt.suptitle("$Erdos$ $ q= %.1f$, $N= %d$"%(q,n))
+    plt.xlabel('$p$')
+    plt.ylabel('$R$')
+    plt.ylim([0-0.02,1+0.02])
+    plt.show()

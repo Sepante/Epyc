@@ -7,10 +7,10 @@
 #include <math.h>
 using namespace std;
 
-int L = pow (2, 7);
+int L = pow (2, 4);
 //int L = 10;
-int n = L*L;
-//int n =100;
+//int n = L*L;
+int n =pow(2,13);
 float cnct_prob = (float)4/(float)n;
 vector<vector<int>>  adj_matrix(n, vector<int>(n));
 int seed;
@@ -174,9 +174,9 @@ int main()
 	srand(time(0));
 	
 	int dis_index;
-	int runNum = 100000;
-	vector<float> p_set={0.1 ,0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 1};
-	vector<float> q_set={0.1 ,0.2, 0.4, 0.6, 0.8, 1};
+	int runNum = 5000;
+	vector<float> p_set={0.1, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1};
+	vector<float> q_set={0.1 ,0.5, 0.8, 1};
 	p_set={0.25};
 	//q_set={0.1, 0.5};
 	q_set={1};
@@ -223,8 +223,8 @@ int main()
 							//cout<<"dummy: "<<dummy<<endl;
 							if(been_I (state_cp[i], dis_index, 1) ) // if the node is sick right now with diseas=dis_index. we use state_cp because it doens't count if the node has been infected in current time step.
 							{
-								turn_grid_neighbs_I(i, dis_index);
-								//turn_general_neighbs_I(i, dis_index);
+								//turn_grid_neighbs_I(i, dis_index);
+								turn_general_neighbs_I(i, dis_index);
 								
 								turn_R(i, dis_index);				//turn_R after spreading between the neighbors. (one step)
 								
@@ -251,7 +251,11 @@ int main()
 				
 				}
 				if(run%(runNum/10)==0)
-					cout << "n: " << n << "p: " << p << "q: " << q << "run: " << run << endl;
+					constr_erdos(cnct_prob);
+				if(run%(100)==0)
+				{
+					cout << "n: " << n << ", p: " << p << ", q: " << q << ", run: " << run << endl;
+				}
 				//cout<<"R: "<<(float)(n-S_num)/n<<endl;
 				fout<<(n-S_num)<<"\n";
 				//cout<<(n-S_num)<<"\n";

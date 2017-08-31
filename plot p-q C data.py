@@ -45,10 +45,13 @@ data =( np.array(data) )
 
 #plt.hist(data, bins=np.logspace(0, np.log10(n),10 )  )
 #"""
-plt.hist(data, bins=np.logspace(0, np.log10(np.max(data)),10 ) )
+plt.hist(data, bins=np.logspace(0, np.log10(np.max(data)),100 ) )
 plt.gca().set_xscale("log")
 #plt.ylim([1,100000])
 plt.gca().set_yscale("log")
+plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
+plt.xlabel('$mass$')
+plt.ylabel('$P(m)$')
 plt.show()
 #"""
 #data = np.array([1,2,3,4])
