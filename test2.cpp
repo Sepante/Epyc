@@ -10,6 +10,8 @@ using namespace std;
 
 int main()
 {
+	ofstream fout;
+	fout.open ("cdata.txt");
 	set <int> actives={88,4,99};
 	set <int> actives_cp=actives;
 	int i;
@@ -21,5 +23,6 @@ int main()
 		cout<< *it<<endl;
 	}
 	cout<<actives.size();
+	fout<<"hoola";
 }
 

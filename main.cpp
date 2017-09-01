@@ -10,7 +10,7 @@ using namespace std;
 int L = pow (2, 4);
 //int L = 10;
 //int n = L*L;
-int n =pow(2,13);
+int n =pow(2,3);
 float cnct_prob = (float)4/(float)n;
 vector<vector<int>>  adj_matrix(n, vector<int>(n));
 int seed;
@@ -174,7 +174,7 @@ int main()
 	srand(time(0));
 	
 	int dis_index;
-	int runNum = 5000;
+	int runNum = 100;
 	vector<float> p_set={0.1, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1};
 	vector<float> q_set={0.1 ,0.5, 0.8, 1};
 	p_set={0.25};
