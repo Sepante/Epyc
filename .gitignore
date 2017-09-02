@@ -49,4 +49,4 @@ Temporary Items
 
 # .exe files
 .test2.exe
-.Erdos.exe
+*.exe
