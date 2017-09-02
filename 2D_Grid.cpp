@@ -8,9 +8,7 @@
 using namespace std;
 
 int L = pow (2, 4);
-//int L = 10;
-//int n = L*L;
-int n =pow(2,3);
+int n = L*L;
 float cnct_prob = (float)4/(float)n;
 vector<vector<int>>  adj_matrix(n, vector<int>(n));
 int seed;
@@ -166,7 +164,7 @@ void initialize() //initialize variables for the next run
 
 int main()
 {
-	constr_erdos(cnct_prob); //construct adjacency matrix in the case of erdos renyi graph.
+	//constr_erdos(cnct_prob); //construct adjacency matrix in the case of erdos renyi graph.
 	
 	ofstream fout;
 	fout.open ("cdata.txt");
@@ -186,6 +184,7 @@ int main()
 	fout<<p_set.size()<<"\n";
 	fout<<q_set.size()<<"\n";
 	fout<<runNum<<"\n";
+	
 	for(int pindex=0; pindex<=p_set.size()-1; pindex++)
 		fout<<p_set[pindex]<<"\n";
 	for(int qindex=0; qindex<=q_set.size()-1; qindex++)
