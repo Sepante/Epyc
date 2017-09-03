@@ -43,11 +43,11 @@ qrange = [ data.pop(0) for i in range(q_size)]
 data =( np.array(data) )
 #"""
 
-binned_data =( binned(data, 1, 1600, 200, log = True,returnwidth = True ) )
+binned_data =( binned(data, 1, 12000, 200, log = True,returnwidth = True ) )
 #"""
 plt.bar(binned_data[0], binned_data[1], binned_data[2])
 #plt.bar(binned_data[0], binned_data[1], width)
-
+plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
 plt.xlabel('$mass$')
 plt.ylabel('$P(m)$')
 plt.gca().set_xscale("log")
@@ -59,14 +59,14 @@ plt.show()
 #plt.plot(Q[0],Q[1])
 #plt.gca().set_xscale("log")
 #plt.gca().set_yscale("log")
-"""
+#"""
 
 plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
 
-"""
+#"""
 #in this part we found the slope of the bins in the left part of the plot.
 #"""
-cons=93 #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
+cons = 70  #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
 x = binned_data[0,:cons]
 y = binned_data[1,:cons]
 
