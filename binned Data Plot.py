@@ -45,14 +45,14 @@ qrange = [ data.pop(0) for i in range(q_size)]
 data =( np.array(data) )
 #"""
 #for nindex in range(n_size):
-for nindex in range(1):
+for nindex in range(n_size):
     n = nrange[nindex]
     current_data = data[nindex*runNum : (nindex+1)*runNum]
     binned_data =( binned(current_data, 1, np.max(current_data), 100, log = True,returnwidth = True ) )
     
     plt.bar(binned_data[0], binned_data[1], binned_data[2])
     #plt.bar(binned_data[0], binned_data[1], width)
-    plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
+    plt.suptitle("$Erdos$, $p= %.2f$, $q= %.2f$, $N= %d$"%(prange[0],qrange[0],n))
     plt.xlabel('$mass$')
     plt.ylabel('$P(m)$')
     plt.gca().set_xscale("log")
@@ -65,32 +65,32 @@ for nindex in range(1):
     #plt.gca().set_xscale("log")
     #plt.gca().set_yscale("log")
     
-    
+#    """
     plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
 
-"""
-#in this part we found the slope of the bins in the left part of the plot.
-
-cons = 70  #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
-x = binned_data[0,:cons]
-y = binned_data[1,:cons]
-
-non_zeros_ind = y != 0
-x = x[non_zeros_ind]
-y = y[non_zeros_ind]
-
-#logx = x[zeros_ind]
-#logy = y[zeros_ind]
-logx = np.log10(x)
-logy = np.log10(y)
-coeffs = np.polyfit(logx,logy,deg=1)
-
-
-plt.plot( x, 10**coeffs[1]*(x**coeffs[0]) ,'r-o')
-
-plt.bar(binned_data[0,:cons], binned_data[1,:cons], binned_data[2,:cons])
-
-plt.gca().set_xscale("log")
-plt.gca().set_yscale("log")
-plt.show()
-"""
+    """
+    #in this part we found the slope of the bins in the left part of the plot.
+    
+    cons = 65  #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
+    x = binned_data[0,:cons]
+    y = binned_data[1,:cons]
+    
+    non_zeros_ind = y != 0
+    x = x[non_zeros_ind]
+    y = y[non_zeros_ind]
+    
+    #logx = x[zeros_ind]
+    #logy = y[zeros_ind]
+    logx = np.log10(x)
+    logy = np.log10(y)
+    coeffs = np.polyfit(logx,logy,deg=1)
+    
+    
+    plt.plot( x, 10**coeffs[1]*(x**coeffs[0]) ,'r-o')
+    
+    plt.bar(binned_data[0,:cons], binned_data[1,:cons], binned_data[2,:cons])
+    
+    plt.gca().set_xscale("log")
+    plt.gca().set_yscale("log")
+    plt.show()
+    """

@@ -10,7 +10,7 @@ using namespace std;
 int L = pow (2, 4);
 //int L = 10;
 //int n = L*L;
-int n =pow(2,11);
+int n =pow(2,2);
 float cnct_prob = (float)4/(float)n;
 vector<vector<int>>  adj_matrix(n, vector<int>(n));
 int seed;
@@ -183,7 +183,7 @@ int main()
 	
 	int dis_index;
 	int runNum = 10000;
-	vector<int> n_set={two_powered(10)};
+	vector<int> n_set={two_powered(8) ,two_powered(10)};
 	vector<float> p_set={0.1, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1};
 	vector<float> q_set={0.1 ,0.5, 0.8, 1};
 	//p_set={0.25};
@@ -211,6 +211,9 @@ int main()
 	{
 	n=n_set[nindex];
 	
+	//recalculating connection probebility of the nodes for the new n value.
+	cnct_prob = (float)4/(float)n;
+	cout<<"cnct_prob= "<<cnct_prob<<endl;
 	//resizing the state and adj_matrix
 	adj_matrix.clear();
 	adj_matrix.resize( n , vector<int>( n , 0 ) );
@@ -271,7 +274,8 @@ int main()
 						for(int i=0; i<=L-1; i++)
 						{
 							for(int j=0; j<=L-1; j++)
-								cout<<state[i*L+j]<<"\t";
+								//cout<<state[i*L+j]<<"\t";
+								cout<<adj_matrix[i][j]<<"\t";
 							cout<<endl;
 						}
 					*/
@@ -293,5 +297,6 @@ int main()
 			}
 		}
 	}
+	cout<<cnct_prob;
 }
 
