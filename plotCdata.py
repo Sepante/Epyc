@@ -1,9 +1,7 @@
 from __future__ import division
 import numpy as np
-import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import copy as cp
 
 
 with open('cdata.txt') as f:

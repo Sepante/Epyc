@@ -24,6 +24,16 @@ float p, q;
 vector<int> state(n, 1);
 vector<int> state_cp;
 
+int two_powered( int exponent )
+{
+	int answer = 1;
+
+	for (int i = 0; i < exponent; ++i) 
+		answer *= 2;
+		
+	return answer;
+}
+
 int been_I(int cell_state, int dis_index = 1, bool now = 0)
 {
 	// dis_index = 1 means any disease, 2 means the first and 3 means the second disease.
@@ -165,9 +175,7 @@ void initialize() //initialize variables for the next run
 }
 
 int main()
-{
-	constr_erdos(cnct_prob); //construct adjacency matrix in the case of erdos renyi graph.
-	
+{	
 	ofstream fout;
 	fout.open ("cdata.txt");
 	
@@ -175,90 +183,113 @@ int main()
 	
 	int dis_index;
 	int runNum = 10000;
+	vector<int> n_set={two_powered(10)};
 	vector<float> p_set={0.1, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1};
 	vector<float> q_set={0.1 ,0.5, 0.8, 1};
-	p_set={0.25};
-	//q_set={0.1, 0.5};
+	//p_set={0.25};
+	//q_set={0.5, 0.5};
 	q_set={1};
+	p_set={0.25};
+	//p_set={1,0.25};
 	
 	//write system properties to file, for later use in python.
-	fout<<n<<"\n";
+	//fout<<n<<"\n";
+	fout<<n_set.size()<<"\n";
 	fout<<p_set.size()<<"\n";
 	fout<<q_set.size()<<"\n";
 	fout<<runNum<<"\n";
+	
+	for(int nindex=0; nindex<=n_set.size()-1; nindex++)
+		fout<<n_set[nindex]<<"\n";
 	for(int pindex=0; pindex<=p_set.size()-1; pindex++)
 		fout<<p_set[pindex]<<"\n";
 	for(int qindex=0; qindex<=q_set.size()-1; qindex++)
 		fout<<q_set[qindex]<<"\n";
 	
 	//loop on different p values.
-	for(int pindex=0; pindex<=p_set.size()-1; pindex++)
+	for(int nindex=0; nindex<=n_set.size()-1; nindex++)
 	{
-		p=p_set[pindex];
-		//loop on different q values.
-		for(int qindex=0; qindex<=q_set.size()-1; qindex++)
+	n=n_set[nindex];
+	
+	//resizing the state and adj_matrix
+	adj_matrix.clear();
+	adj_matrix.resize( n , vector<int>( n , 0 ) );
+	
+	state.clear();
+	state.resize( n , 1 );
+	
+	//adj_matr
+	constr_erdos(cnct_prob); //construct adjacency matrix in the case of erdos renyi graph.
+	
+		for(int pindex=0; pindex<=p_set.size()-1; pindex++)
 		{
-			q=q_set[qindex];
-			//loop on different realizations.
-			for(int run = 0; run<=runNum-1; run++)
+			p=p_set[pindex];
+			//loop on different q values.
+			for(int qindex=0; qindex<=q_set.size()-1; qindex++)
 			{
-			initialize(); //initialize variables for the next run
-				//the main time loop of the program.
-				for(int t=1; t<=100000000000 && actives.size() >= 1; t++) //I_num[0]+I_num[1] >= 1 is to check if there remains any active nodes to further change the state.
+				q=q_set[qindex];
+				//loop on different realizations.
+				for(int run = 0; run<=runNum-1; run++)
 				{
-					state_cp = state;
-					actives_cp = actives;
-					
-					//loop on the infected nodes, in order to spread the infection, and afterwards turning them to recovered nodes.
-					for (set<int>::iterator it=actives_cp.begin(); it!=actives_cp.end(); it++)
+				initialize(); //initialize variables for the next run
+					//the main time loop of the program.
+					for(int t=1; t<=100000000000 && actives.size() >= 1; t++) //I_num[0]+I_num[1] >= 1 is to check if there remains any active nodes to further change the state.
 					{
-				
-						i = *it;
-						//cout<< state[i]<<endl;
+						state_cp = state;
+						actives_cp = actives;
 						
-						dis_index = (rand()%2)+2; //which disease to start spreading first for node.
-						
-						for (int dummy=0; dummy <= 1 ; dummy++, dis_index = ((dis_index+1)%2)+2) //this for, runs over two dis_indexes, dummy doesn't matter.
+						//loop on the infected nodes, in order to spread the infection, and afterwards turning them to recovered nodes.
+						for (set<int>::iterator it=actives_cp.begin(); it!=actives_cp.end(); it++)
 						{
-							//cout<<"dummy: "<<dummy<<endl;
-							if(been_I (state_cp[i], dis_index, 1) ) // if the node is sick right now with diseas=dis_index. we use state_cp because it doens't count if the node has been infected in current time step.
+					
+							i = *it;
+							//cout<< state[i]<<endl;
+							
+							dis_index = (rand()%2)+2; //which disease to start spreading first for node.
+							
+							for (int dummy=0; dummy <= 1 ; dummy++, dis_index = ((dis_index+1)%2)+2) //this for, runs over two dis_indexes, dummy doesn't matter.
 							{
-								//turn_grid_neighbs_I(i, dis_index);
-								turn_general_neighbs_I(i, dis_index);
-								
-								turn_R(i, dis_index);				//turn_R after spreading between the neighbors. (one step)
-								
-			
-							}				
+								//cout<<"dummy: "<<dummy<<endl;
+								if(been_I (state_cp[i], dis_index, 1) ) // if the node is sick right now with diseas=dis_index. we use state_cp because it doens't count if the node has been infected in current time step.
+								{
+									//turn_grid_neighbs_I(i, dis_index);
+									turn_general_neighbs_I(i, dis_index);
+									
+									turn_R(i, dis_index);				//turn_R after spreading between the neighbors. (one step)
+									
+				
+								}				
+							}
+							
 						}
-						
+	
+					//cout<<"t: "<<t<<endl;
+					//cout<<"R: "<<n-S_num<<endl;
+						//output				
+					/*
+					L=n;
+						for(int i=0; i<=L-1; i++)
+						{
+							for(int j=0; j<=L-1; j++)
+								cout<<state[i*L+j]<<"\t";
+							cout<<endl;
+						}
+					*/
+					//fout<<n-S_num<<" ";
+					
 					}
-
-				//cout<<"t: "<<t<<endl;
-				//cout<<"R: "<<n-S_num<<endl;
-					//output				
-				/*
-					for(int i=0; i<=L-1; i++)
+					if(run%(runNum/10)==0)
+						cout << "n: " << n << ", p: " << p << ", q: " << q << ", run: " << run << endl;
+					
+					if(run%(10)==0)
 					{
-						
-						for(int j=0; j<=L-1; j++)
-							cout<<state[i*L+j]<<"\t";
-						cout<<endl;
+						constr_erdos(cnct_prob);
 					}
-				*/
-				
-				//fout<<n-S_num<<" ";
-				
+	
+					//cout<<"R: "<<(float)(n-S_num)/n<<endl;
+					fout<<(n-S_num)<<"\n";
+					//cout<<(n-S_num)<<"\n";
 				}
-				if(run%(runNum/10)==0)
-					constr_erdos(cnct_prob);
-				if(run%(100)==0)
-				{
-					cout << "n: " << n << ", p: " << p << ", q: " << q << ", run: " << run << endl;
-				}
-				//cout<<"R: "<<(float)(n-S_num)/n<<endl;
-				fout<<(n-S_num)<<"\n";
-				//cout<<(n-S_num)<<"\n";
 			}
 		}
 	}

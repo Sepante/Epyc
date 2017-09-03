@@ -21,7 +21,7 @@ def binned( data, xmin, xmax, binNum, log = False, returnwidth = False):
             
         if(returnwidth == True ):
             width=np.diff(x_axis)
-            print len(width)
+            #print len(width)
             return ( np.array([x_axis[:-1], bin_array, width]) )
             
     if(not log):
@@ -33,39 +33,44 @@ with open('cdata.txt') as f:
     data=[float(i) for i in f]
 
 
-n = int(data.pop(0))
+n_size = int(data.pop(0))
+#n = int(data.pop(0))
 p_size = int(data.pop(0))
 q_size = int(data.pop(0))
 runNum = int(data.pop(0))
+nrange = [ data.pop(0) for i in range(n_size)]
 prange = [ data.pop(0) for i in range(p_size)]
 qrange = [ data.pop(0) for i in range(q_size)]
 
 data =( np.array(data) )
 #"""
+#for nindex in range(n_size):
+for nindex in range(1):
+    n = nrange[nindex]
+    current_data = data[nindex*runNum : (nindex+1)*runNum]
+    binned_data =( binned(current_data, 1, np.max(current_data), 100, log = True,returnwidth = True ) )
+    
+    plt.bar(binned_data[0], binned_data[1], binned_data[2])
+    #plt.bar(binned_data[0], binned_data[1], width)
+    plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
+    plt.xlabel('$mass$')
+    plt.ylabel('$P(m)$')
+    plt.gca().set_xscale("log")
+    plt.gca().set_yscale("log")
+    plt.show()
+    
+    
+    #plt.ylim([0,10000])
+    #plt.plot(Q[0],Q[1])
+    #plt.gca().set_xscale("log")
+    #plt.gca().set_yscale("log")
+    
+    
+    plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
 
-binned_data =( binned(data, 1, 12000, 200, log = True,returnwidth = True ) )
-#"""
-plt.bar(binned_data[0], binned_data[1], binned_data[2])
-#plt.bar(binned_data[0], binned_data[1], width)
-plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
-plt.xlabel('$mass$')
-plt.ylabel('$P(m)$')
-plt.gca().set_xscale("log")
-plt.gca().set_yscale("log")
-plt.show()
-#"""
-
-#plt.ylim([0,10000])
-#plt.plot(Q[0],Q[1])
-#plt.gca().set_xscale("log")
-#plt.gca().set_yscale("log")
-#"""
-
-plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$"%(prange[0],qrange[0],n))
-
-#"""
+"""
 #in this part we found the slope of the bins in the left part of the plot.
-#"""
+
 cons = 70  #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
 x = binned_data[0,:cons]
 y = binned_data[1,:cons]
@@ -88,4 +93,4 @@ plt.bar(binned_data[0,:cons], binned_data[1,:cons], binned_data[2,:cons])
 plt.gca().set_xscale("log")
 plt.gca().set_yscale("log")
 plt.show()
-#"""
+"""

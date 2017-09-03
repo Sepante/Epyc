@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <fstream>
 #include <vector>
 #include <array>
@@ -10,19 +11,10 @@ using namespace std;
 
 int main()
 {
-	ofstream fout;
-	fout.open ("cdata.txt");
-	set <int> actives={88,4,99};
-	set <int> actives_cp=actives;
-	int i;
-	actives.erase(99);
-	for (set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
-	{
+char c = 0;
 
-		i = *it;
-		cout<< *it<<endl;
-	}
-	cout<<actives.size();
-	fout<<"hoola";
+cout<<sizeof(char)<<endl;
+cout<<sizeof(int)<<endl;
+cout<<sizeof(short int);
+
 }
-
