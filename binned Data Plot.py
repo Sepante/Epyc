@@ -15,7 +15,7 @@ def binned( data, xmin, xmax, binNum, log = False, returnwidth = False):
             xbin-=1
         bin_array[xbin]+=1
     if(log):
-        x_axis = 10**np.arange(xmin, xmax+binLen, binLen) #we add binLen to xmax in order to get 1 more step, for later use is diff (for finding the width.)
+        x_axis = 10**np.linspace(xmin, xmax+binLen, num = binNum+1) #we add binLen to xmax in order to get 1 more step, for later use is diff (for finding the width.)
         if(returnwidth == False ):        
             return ( np.array([x_axis[:-1], bin_array]) )
             
