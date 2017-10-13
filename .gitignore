@@ -49,6 +49,7 @@ Temporary Items
 
 # .exe files
 *.exe
+*.out
 
 # my C++ output file
 .cdata.txt
