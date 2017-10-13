@@ -7,10 +7,11 @@
 #include <math.h>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_utility.hpp>
-
 #include <boost/graph/properties.hpp>
 
+
 float r, p = 0.5, q = 1;
+std::set <int> actives={};
 bool dice(float prob)
 {
 	float r = ((float) rand() / (RAND_MAX));
@@ -99,11 +100,11 @@ class Person
 		//std::cout << health << '\n';
 	};
 
-	void update()
+	Transfer update()
 	{
-
 		health = supply()*future;
 		future = health;
+		return supply();
 	}
 };
 
@@ -117,15 +118,13 @@ typedef graph_traits<Network>::vertices_size_type Vertex_Num;
 typedef graph_traits<Network>::vertex_iterator Vertex_iter;
 typedef graph_traits<Network>::vertex_descriptor Vertex;
 
-
-float cnct_prob = 0.2;
-
 int main()
 {
 	//	srand(12);
 	Vertex_Num vert_num = 20;
 	Edge_Num edge_num = 0;
 	//Network graph(ERGen(gen, vert_num, edge_num), ERGen(), vert_num);
+	float cnct_prob = (float)4/(float)edge_num;
 	Network graph(vert_num);
 
 	for (size_t i = 0; i < vert_num; i++)
@@ -143,10 +142,11 @@ int main()
 	int seed = rand() % vert_num;
 	Vertex v = vertex(seed, graph);
 	graph[v].health = 6;
-	for (size_t t = 0; t <= 8; t++)
+	actives.insert(seed);
+	for (size_t t = 0; t <= 8 && actives.size() >= 1 ; t++)
 	{
 	//	std::cout << "time: "<< t << '\n';
-		for(Vertex vd : make_iterator_range(vertices(graph)))
+		for( Vertex vd : make_iterator_range( vertices(graph) ) )
 	  {
 			if (graph[vd].supply() != 1)
 			{
@@ -160,10 +160,17 @@ int main()
 			}
 			//std::cout << vd << ":  " << graph[vd].health << '\n';
 	  }
-		for(Vertex vd : make_iterator_range(vertices(graph)))
+		for( Vertex vd : make_iterator_range( vertices(graph) ) )
 		{
-			graph[vd].update();
-			std::cout << vd << ": " << graph[vd].health << '\n';
+			actives = {};
+			if(graph[vd].update() != 1)
+			{
+				actives.insert(vd);
+				std::cout << "supplier: " << graph[vd].supply() << '\n';
+			}
+			else
+			std::cout << "non-supplier: " << graph[vd].supply() << '\n';
+			//std::cout << vd << ": " << graph[vd].health << '\n';
 		}
 		std::cout << '\n';
 	}
