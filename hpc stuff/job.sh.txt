@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #PBS -N sis_two_dis
-##PBS -l mem=16000MB
+##PBS -l mem=1600MB
 #PBS -l nodes=1:ppn=12
 #PBS -l walltime=10:00:00
 cd /home/samhz.physics.sharif/SIS/run
