@@ -8,10 +8,12 @@ with open('cdata.txt') as f:
     data=[float(i) for i in f]
 
 
-n = int(data.pop(0))
+n_size = int(data.pop(0))
+#n = int(data.pop(0))
 p_size = int(data.pop(0))
 q_size = int(data.pop(0))
 runNum = int(data.pop(0))
+nrange = [ data.pop(0) for i in range(n_size)]
 prange = [ data.pop(0) for i in range(p_size)]
 qrange = [ data.pop(0) for i in range(q_size)]
 
