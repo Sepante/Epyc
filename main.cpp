@@ -1,3 +1,5 @@
+#include "global.h"
+#include "SIR.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -16,23 +18,16 @@ using std::vector;
 
 
 
-float r, p = 1, q = 1;
+float r, p = 0.25, q = 1;
 float percol_prob = 0;
 //int actives = 0;
 std::set <int> actives={};
 //int runNum = 1000;
 
 //int infect_cluster;
-bool dice(float prob)
-{
-	float r = ((float) rand() / (RAND_MAX));
-	if (r < prob)
-		return 1;
-	else return 0;
-}
 
 
-typedef enum { neither = 1, both = 6, dis_one = 2, dis_two = 3 } Transfer;
+
 //typedef enum { neither, dis_one, dis_two, both } State;
 
 class Interaction
@@ -41,93 +36,9 @@ class Interaction
 	int present = 1;
 };
 
-class Person
-{
-	public:
-	int health = 1;
-	int future = 1;
-	Transfer demand()
-	{
-		if(future == 1)
-			return both;
-			else if (future == 3 || future == 9)
-			{
-				return dis_one;
-			}
-			else if (future == 2 || future == 4)
-			{
-				return dis_two;
-			}
-			else return neither;
-	};
 
-	Transfer supply()
-	{
-		if(health == 6)
-			return both;
-			else if (health == 2 || health == 18)
-			{
-				return dis_one;
-			}
-			else if (health == 3 || health == 12)
-			{
-				return dis_two;
-			}
-			else return neither;
-	};
-
-	void turn_I(Transfer supply)
-	{
-		//std::cout << health << "," << supply << "-->";
-		Transfer demand_v = demand();
-		switch (demand_v)
-		{
-		case neither:
-			//std::cout << "Invalid selection!" << std::endl;
-			break;
-    case both:
-			if (supply == both) // supply and demand are in "both" state.
-			{
-				auto dis_first = dis_one, dis_second = dis_two;
-				if (dice(0.5))
-				{
-					dis_first = dis_two;
-					dis_second = dis_one;
-				}
-
-				if (dice(p))
-				{
-					if (dice(q))
-						future *= (dis_first*dis_second) ;
-					else
-						future *= dis_first;
-				}
-				else if (dice(p))
-					future *= dis_second;
-			}
-			else if (dice(p))
-				future *= supply;
-			//std::cout << "First item selected!" << std::endl;
- 			break;
-    default:
-      //std::cout << "Second item selected!" << std::endl;
-			if (supply == demand_v || supply == both)
-				future *= demand_v;
-      break;
-		}
-		//std::cout << health << '\n';
-	};
-
-	Transfer update()
-	{
-		health = supply()*future;
-		future = health;
-		return supply();
-	}
-};
-
-//typedef adjacency_list<listS, vecS, undirectedS, Person> Network;
-typedef adjacency_list<listS, vecS, undirectedS, Person, Interaction> Network;
+//typedef adjacency_list<listS, vecS, undirectedS, SIR> Network;
+typedef adjacency_list<listS, vecS, undirectedS, SIR, Interaction> Network;
 typedef graph_traits<Network>::edges_size_type Edge_Num;
 typedef graph_traits<Network>::vertices_size_type Vertex_Num;
 typedef graph_traits<Network>::vertex_iterator Vertex_iter;
@@ -192,7 +103,7 @@ int main()
 	fout.open("cdata.txt");
 
 	srand(time(0));
-	int runNum = 10;
+	int runNum = 1000;
 	vector<Vertex> n_set={20000};
 	vector<float> p_set={0.1, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1};
 	vector<float> q_set={0.1 ,0.5, 0.8, 1};
@@ -259,7 +170,7 @@ int main()
 
 		for (size_t t = 0; t <= 1000000 && actives.size() >= 1 ; t++)
 		{
-			kill_some_edges(percol_prob);
+			//kill_some_edges(percol_prob);
 			//infect_cluster = 0;
 			//for( Vertex vd : make_iterator_range( vertices(society) ) )
 			Vertex vd;
@@ -278,7 +189,7 @@ int main()
 			for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
 			{
 				vd = *it;
-				cout << "set item: " << vd << ",  health: " << society[vd].health << endl;
+				//cout << "set item: " << vd << ",  health: " << society[vd].health << endl;
 			}
 
 			actives = {};
@@ -307,7 +218,7 @@ int main()
 
 
 	//cout<<cnct_prob<<endl;
-	boost::print_graph(society);
-	std::cout << "next:" << '\n';
-	boost::print_graph(society_origin);
+//	boost::print_graph(society);
+//	std::cout << "next:" << '\n';
+//	boost::print_graph(society_origin);
 }
