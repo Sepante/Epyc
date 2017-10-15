@@ -69,7 +69,7 @@ for nindex in range(n_size):
     
 #"""
 
-    #"""
+    """
     #in this part we found the slope of the bins in the left part of the plot.
     
     cons = 5200 #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
@@ -95,4 +95,4 @@ for nindex in range(n_size):
     plt.gca().set_xscale("log")
     plt.gca().set_yscale("log")
     plt.show()
-    #"""
+    """
