@@ -68,7 +68,8 @@ void SIR::turn_I(Transfer supply)
     default:
       //std::cout << "Second item selected!" << std::endl;
 			if (supply == demand_v || supply == both)
-				future *= demand_v;
+				if(dice(q))
+					future *= demand_v;
       break;
 		}
 		//std::cout << health << '\n';
