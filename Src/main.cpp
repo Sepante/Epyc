@@ -18,7 +18,7 @@ using std::vector;
 
 
 
-float r, p = 0.25, q = 0;
+float r, p = 0.25, q = 1;
 float percol_prob = 0;
 //int actives = 0;
 std::set <int> actives={};
