@@ -11,6 +11,8 @@
 #include <boost/graph/graph_utility.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/config.hpp>
+#include <boost/graph/connected_components.hpp>
+
 using namespace boost;
 using std::cout;
 using std::endl;
@@ -18,11 +20,11 @@ using std::vector;
 
 
 
-float r, p = 0.25, q = 1;
+float r = 1, p = 0.25, q = 1;
 float percol_prob = 0;
 //int actives = 0;
 std::set <int> actives={};
-//int runNum = 1000;
+int runNum = 500;
 
 //int infect_cluster;
 
@@ -47,7 +49,7 @@ typedef graph_traits<Network>::edge_descriptor Edge;
 typedef graph_traits<Network>::edge_iterator Edge_iter;
 //Vertex_Num vert_num = 131072;
 Vertex_Num vert_num = 1024;
-float cnct_prob = (float)4/(float)vert_num;
+//float cnct_prob = (float)4/(float)vert_num;
 //float cnct_prob = 1;
 
 //Network society(vert_num);
@@ -61,11 +63,13 @@ void init_states()
 		society[vd].health = 1;
 		society[vd].future = 1;
 	}
-	//int seed = rand() % vert_num;
-	int seed = 2;
+	int seed = rand() % vert_num;
+	//int seed = 2;
 	Vertex v = vertex(seed, society);
 	society[v].health = 6;
 	society[v].future = 6;
+	//society[v].health = 2;
+	//society[v].future = 2;
 	society_origin = Network(society);
 	actives = {};
 	actives.insert(seed);
@@ -95,6 +99,23 @@ void kill_some_edges(float p)
 	}
 }
 
+void cons_Erdos(int n)
+{
+	float cnct_prob = (float)100/(float)n;
+	society.clear();
+	for (size_t i = 0; i < n; i++)
+	{
+		for (size_t j = i+1; j < n; j++)
+		{
+			if ( dice(cnct_prob) )
+			{
+				add_edge(i, j, society);
+				//add_edge(j, i, society);
+			}
+		}
+	}
+	//std::cout << "Erdos running" << '\n';
+}
 
 int main()
 {
@@ -103,10 +124,13 @@ int main()
 	fout.open("cdata.txt");
 
 	srand(time(0));
-	int runNum = 1000;
-	vector<Vertex> n_set={20000};
-	vector<float> p_set={0.1, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1};
-	vector<float> q_set={0.1 ,0.5, 0.8, 1};
+	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
+	//std::vector<int> n_set={16384};
+	std::vector<int> n_set={1000};
+	std::vector<float> p_set={0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6};
+	//	std::vector<float> p_set={0.8, 0.9, 1};
+	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
+
 	q_set={1};
 	p_set={0.25};
 	//write system properties to file, for later use in python.
@@ -116,7 +140,7 @@ int main()
 	fout<<runNum<<"\n";
 
 
-	for(int nindex=0; nindex<=n_set.size()-1; nindex++)
+	for(int nindex=0; nindex<=n_set.size()-1; nindex++)asd
 		fout<<n_set[nindex]<<"\n";
 	for(int pindex=0; pindex<=p_set.size()-1; pindex++)
 		fout<<p_set[pindex]<<"\n";
@@ -126,19 +150,7 @@ int main()
 	//Edge_Num edge_num = 0;
 	//Network society(ERGen(gen, vert_num, edge_num), ERGen(), vert_num);
 //cout << "cnct_prob: "<< cnct_prob << endl;
-/* // Erdos Renyi constructor.
-	for (size_t i = 0; i < vert_num; i++)
-	{
-		for (size_t j = i+1; j < vert_num; j++)
-		{
-			if ( dice(cnct_prob) )
-			{
-				add_edge(i, j, society);
-				//std::cout << i << "-->" << j << '\n';
-			}
-		}
-	}
-*/
+/*
 	std::ifstream  fin;
 	fin.open("input_matrix.txt");
 	if (!fin)
@@ -158,58 +170,79 @@ int main()
 		//std::cout << j << '\n';
 		fin>>text;
 	}
-
+*/
 	//boost::print_graph(society);
-
-
-
-	for (size_t run = 0; run < runNum; run++)
+	for (size_t pindex = 0; pindex < p_set.size(); pindex++)
 	{
-		//std::cout << "run: " << run << '\n';
-		init_states();
-
-		for (size_t t = 0; t <= 1000000 && actives.size() >= 1 ; t++)
+		p = p_set[pindex];
+		//rate_difference = p / q;
+		for (size_t qindex = 0; qindex < q_set.size(); qindex++)
 		{
-			//kill_some_edges(percol_prob);
-			//infect_cluster = 0;
-			//for( Vertex vd : make_iterator_range( vertices(society) ) )
-			Vertex vd;
-			for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
-		  {
-				vd = *it;
-				//std::cout << "iterating vd: " << vd << '\n';
-				if (society[vd].supply() != 1)
-				{
-					for ( Vertex vi : make_iterator_range( adjacent_vertices(vd, society) ) )
-					{
-						society[vi].turn_I( society[vd].supply() );
-					}
-				}
-		  }
-			for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
+			q = q_set[qindex];
+			for(int nindex=0; nindex<n_set.size(); nindex++)
 			{
-				vd = *it;
-				//cout << "set item: " << vd << ",  health: " << society[vd].health << endl;
-			}
+				vert_num = n_set[nindex];
+				cons_Erdos(vert_num);
+				for (size_t run = 0; run < runNum; run++)
+				{
+					//std::cout << "run: " << run << '\n';
+					init_states();
 
-			actives = {};
-			for( Vertex vd : make_iterator_range( vertices(society) ) )
-			{
-				if(society[vd].update() != 1)
-				{
-					actives.insert(vd);
+					for (size_t t = 0; t <= 1000000 && actives.size() >= 1 ; t++)
+					{
+						//kill_some_edges(percol_prob);
+						//infect_cluster = 0;
+						//for( Vertex vd : make_iterator_range( vertices(society) ) )
+						Vertex vd;
+						for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
+					  {
+							vd = *it;
+							//std::cout << "iterating vd: " << vd << '\n';
+							if (society[vd].supply() != 1)
+							{
+								for ( Vertex vi : make_iterator_range( adjacent_vertices(vd, society) ) )
+								{
+									society[vi].turn_I( society[vd].supply() );
+								}
+							}
+					  }
+						for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
+						{
+							vd = *it;
+							//cout << "set item: " << vd << ",  health: " << society[vd].health << endl;
+						}
+
+						actives = {};
+						for( Vertex vd : make_iterator_range( vertices(society) ) )
+						{
+							if(society[vd].update() != 1)
+							{
+								actives.insert(vd);
+							}
+							//cout << vd << ": " << society[vd].health << endl;
+						}
+						//std::cout << '\n';
+					//	std::cout << "t: " << t << '\n';
+					}
+					if(run % 200 == 0)
+						std::cout << "n: " << vert_num << ", p: " << p << ", q: " << q << ", run: " << run << std::endl;
+					fout << cluster_size() << '\n';
+
+					//society.clear();
 				}
-				//cout << vd << ": " << society[vd].health << endl;
 			}
-			//std::cout << '\n';
-		//	std::cout << "t: " << t << '\n';
 		}
-		std::cout << "run: " << run << '\t' << "infecteds: " << cluster_size() << '\n';
+<<<<<<< current
+		if(run % 200 == 0)
+			std::cout << "n: " << vert_num << ", p: " << p << ", q: " << q << ", run: " << run << std::endl;
 		fout << cluster_size() << '\n';
 
 		//society.clear();
 	}
 
+=======
+}
+>>>>>>> before discard
 
 	clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
