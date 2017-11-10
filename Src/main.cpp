@@ -20,11 +20,11 @@ using std::vector;
 
 
 
-float r = 1, p = 0.25, q = 1;
+float r = 0.5, p = 0.25, q = 1;
 float percol_prob = 0;
 //int actives = 0;
 std::set <int> actives={};
-int runNum = 500;
+int runNum = 400;
 
 //int infect_cluster;
 
@@ -48,7 +48,7 @@ typedef graph_traits<Network>::vertex_descriptor Vertex;
 typedef graph_traits<Network>::edge_descriptor Edge;
 typedef graph_traits<Network>::edge_iterator Edge_iter;
 //Vertex_Num vert_num = 131072;
-Vertex_Num vert_num = 1024;
+Vertex_Num vert_num = 256;
 //float cnct_prob = (float)4/(float)vert_num;
 //float cnct_prob = 1;
 
@@ -85,7 +85,7 @@ int cluster_size()
 		}
 	return infect_cluster;
 }
-
+/*
 void kill_some_edges(float p)
 {
 	society = society_origin;
@@ -98,10 +98,10 @@ void kill_some_edges(float p)
 			remove_edge(*vi, society);
 	}
 }
-
+*/
 void cons_Erdos(int n)
 {
-	float cnct_prob = (float)100/(float)n;
+	float cnct_prob = (float)4/(float)n;
 	society.clear();
 	for (size_t i = 0; i < n; i++)
 	{
@@ -126,13 +126,13 @@ int main()
 	srand(time(0));
 	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
 	//std::vector<int> n_set={16384};
-	std::vector<int> n_set={1000};
-	std::vector<float> p_set={0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6};
+	std::vector<int> n_set={8192};
+	std::vector<float> p_set={0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6, 1};
 	//	std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
 
 	q_set={1};
-	p_set={0.25};
+	//p_set={0.25};
 	//write system properties to file, for later use in python.
 	fout<<n_set.size()<<"\n";
 	fout<<p_set.size()<<"\n";
@@ -140,7 +140,7 @@ int main()
 	fout<<runNum<<"\n";
 
 
-	for(int nindex=0; nindex<=n_set.size()-1; nindex++)asd
+	for(int nindex=0; nindex<=n_set.size()-1; nindex++)
 		fout<<n_set[nindex]<<"\n";
 	for(int pindex=0; pindex<=p_set.size()-1; pindex++)
 		fout<<p_set[pindex]<<"\n";
@@ -175,7 +175,6 @@ int main()
 	for (size_t pindex = 0; pindex < p_set.size(); pindex++)
 	{
 		p = p_set[pindex];
-		//rate_difference = p / q;
 		for (size_t qindex = 0; qindex < q_set.size(); qindex++)
 		{
 			q = q_set[qindex];
@@ -228,21 +227,11 @@ int main()
 						std::cout << "n: " << vert_num << ", p: " << p << ", q: " << q << ", run: " << run << std::endl;
 					fout << cluster_size() << '\n';
 
-					//society.clear();
 				}
 			}
 		}
-<<<<<<< current
-		if(run % 200 == 0)
-			std::cout << "n: " << vert_num << ", p: " << p << ", q: " << q << ", run: " << run << std::endl;
-		fout << cluster_size() << '\n';
-
-		//society.clear();
 	}
 
-=======
-}
->>>>>>> before discard
 
 	clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;

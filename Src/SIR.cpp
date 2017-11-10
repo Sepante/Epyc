@@ -77,7 +77,20 @@ void SIR::turn_I(Transfer supply)
 
 Transfer SIR::update()
 {
-	health = supply()*future;
+
+	auto prev_supply = supply();
+
+	//updating the infection
+	health = future;
+
+	//recoveries:
+	if (prev_supply % 2 == 0)
+		if (dice (r) )
+			health *= 2;
+	if (prev_supply % 3 == 0)
+		if (dice (r) )
+			health *= 3;
+
 	future = health;
 	return supply();
 }

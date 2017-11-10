@@ -48,8 +48,12 @@ data =( np.array(data) )
 for nindex in range(n_size):
     n = nrange[nindex]
     current_data = data[nindex*runNum : (nindex+1)*runNum]
-    binned_data =( binned(current_data, 1, np.max(current_data), 10000, log = True,returnwidth = True ) )
+    #binned_data =( binned(current_data, 1, np.max(current_data), 10000, log = True,returnwidth = True ) )
     
+    binned_data =( binned(current_data, 1, np.max(current_data), 200000, log = True,returnwidth = True ) )
+    binned_data[1] /= (runNum) #normalizing the bin numbers to one to create the probabiltly.
+    binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
+
     #plt.bar(binned_data[0], binned_data[1], binned_data[2])
     plt.plot(binned_data[0], binned_data[1])
     #plt.bar(binned_data[0], binned_data[1]/n, binned_data[2])
@@ -59,6 +63,8 @@ for nindex in range(n_size):
     plt.ylabel('$P(m)$')
     plt.gca().set_xscale("log")
     plt.gca().set_yscale("log")
+    
+    plt.savefig("n="+str(n)+", p="+str(prange[0])+ ", q=" + str(qrange[0]) + ".png")
     plt.show()
     
     
@@ -72,7 +78,7 @@ for nindex in range(n_size):
     """
     #in this part we found the slope of the bins in the left part of the plot.
     
-    cons = 5200 #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
+    cons = 100500 #cons is the largest value of x which the linear behaviour on the loglog plot continues. also depends on the number of the bins (binNum).
     x = binned_data[0,:cons]
     y = binned_data[1,:cons]
     
@@ -92,6 +98,7 @@ for nindex in range(n_size):
     #plt.bar(binned_data[0,:cons], binned_data[1,:cons], binned_data[2,:cons])
     plt.plot(binned_data[0,:cons], binned_data[1,:cons])
     plt.suptitle("$Erdos$, $p= %.2f$, $q= %.1f$, $N= %d$, $m= %3f$"%(prange[0],qrange[0],n,coeffs[0]))
+    
     plt.gca().set_xscale("log")
     plt.gca().set_yscale("log")
     plt.show()
