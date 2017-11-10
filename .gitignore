@@ -50,7 +50,11 @@ Temporary Items
 # .exe files
 *.exe
 *.out
+*/*.out
+
 
 # my C++ output file
 .cdata.txt
 cdata.txt
+*.txt
+*/*.txt
