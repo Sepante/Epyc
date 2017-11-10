@@ -51,6 +51,7 @@ Temporary Items
 *.exe
 *.out
 */*.out
+run
 
 
 # my C++ output file
