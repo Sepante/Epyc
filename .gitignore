@@ -52,6 +52,7 @@ Temporary Items
 *.out
 */*.out
 run
+*/run
 
 
 # my C++ output file
