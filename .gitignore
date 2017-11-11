@@ -52,7 +52,7 @@ Temporary Items
 *.out
 */*.out
 run
-*/run
+Src/run
 
 
 # my C++ output file
@@ -60,3 +60,5 @@ run
 cdata.txt
 *.txt
 */*.txt
+*/*.png
+*.dat
