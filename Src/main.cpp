@@ -14,7 +14,9 @@
 #include <boost/graph/connected_components.hpp>
 
 typedef enum { erdos = 1, from_file = 2} Graph_Type;
-Graph_Type graphT = erdos;
+Graph_Type graphT = from_file;
+//Graph_Type graphT = erdos;
+
 using namespace boost;
 using std::cout;
 using std::endl;
@@ -26,7 +28,7 @@ float r = 1, p = 0.25, q = 1;
 float percol_prob = 0;
 //int actives = 0;
 std::set <int> actives={};
-int runNum = 500;
+int runNum = 5000;
 
 //int infect_cluster;
 
@@ -56,7 +58,6 @@ Vertex_Num vert_num = 256;
 
 //Network society(vert_num);
 Network society(8);
-Network society_origin;
 
 void init_states()
 {
@@ -72,7 +73,6 @@ void init_states()
 	society[v].future = 6;
 	//society[v].health = 2;
 	//society[v].future = 2;
-	society_origin = Network(society);
 	actives = {};
 	actives.insert(seed);
 	//std::cout << "seed: " << seed << '\n';
@@ -91,7 +91,6 @@ int cluster_size()
 /*
 void kill_some_edges(float p)
 {
-	society = society_origin;
 	Edge_iter vi, vi_end, next;
 	boost::tie(vi, vi_end) = edges(society);
 	for (next = vi; vi != vi_end; vi = next)
@@ -135,7 +134,7 @@ void restart_read_file()
   }
 }
 
-void readfile(int t)
+int readfile(int t)
 {
 	//society.clear();
 	Edge_iter vi, vi_end, next;
@@ -170,10 +169,13 @@ void readfile(int t)
   }
   fin.clear();
   fin.seekg(read_location, fin.beg);
+	//std::cout << "t = " << t << ", edge num = " << num_edges(society)  <<'\n';
+	return read_time;
 }
 
 int main()
 {
+	int starting_time = 0;
 	clock_t begin = clock();
 	std::ofstream fout;
 	fout.open("cdata.txt");
@@ -181,13 +183,14 @@ int main()
 	srand(time(0));
 	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
 	//std::vector<int> n_set={16384};
-	std::vector<int> n_set={128};
+	std::vector<int> n_set={256};
 	std::vector<float> p_set={0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6, 1};
-	//	std::vector<float> p_set={0.8, 0.9, 1};
+	//std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
 
 	q_set={1};
 	p_set={0.25};
+	//p_set = {1};
 	//write system properties to file, for later use in python.
 	fout<<n_set.size()<<"\n";
 	fout<<p_set.size()<<"\n";
@@ -222,11 +225,12 @@ int main()
 					if (graphT == from_file)
 					{
 						restart_read_file();
-						readfile(0);
+						starting_time = readfile(0);
+						restart_read_file();
 					}
 
 					init_states();
-					for (size_t t = 0; t <= 100000000 && actives.size() >= 1 ; t++)
+					for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t++)
 					//for (size_t t = 0; t <= 900 && actives.size() >= 1 ; t++)
 					{
 						//boost::print_graph(society);
@@ -240,8 +244,17 @@ int main()
 						for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
 					  {
 							vd = *it;
+							//std::cout << "vd: "<< vd << '\n';
+							//std::cout << "supply: "<< society[vd].supply() << '\n';
 							if (society[vd].supply() != 1)
 							{
+								//std::cout << "num_vertices: " << num_vertices(society) << '\n';
+								//std::cout << "infection time: " << t << '\n';
+								//if(t == 0)
+
+									//std::cout << "t " << t << '\n';
+									//std::cout << "num_edges " << num_edges(society) << '\n';
+
 								for ( Vertex vi : make_iterator_range( adjacent_vertices(vd, society) ) )
 								{
 									society[vi].turn_I( society[vd].supply() );
@@ -264,7 +277,12 @@ int main()
 						}
 					}
 					if(run % 200 == 0)
-						std::cout << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", run: " << run << std::endl;
+					{
+						if(graphT == erdos)
+							std::cout << "Erdos: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+						if(graphT == from_file)
+							std::cout << "file: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+					}
 					fout << cluster_size() << '\n';
 				}
 			}
