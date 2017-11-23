@@ -24,7 +24,7 @@ rrange = [ data.pop(0) for i in range(r_size)]
 
 #data =( np.array(data).reshape(p_size,q_size,runNum) )/n
 n = nrange[0]
-#n = 243
+n = 243
 data =( np.array(data).reshape(p_size, q_size, runNum) )/n
 
 """
@@ -32,7 +32,7 @@ for i in range(len(qrange)):
     for j in range(runNum):
         plt.plot(prange, data[:,i,j],'-.')
 """
-opacity_num = 200 * 1/runNum
+opacity_num =  100/runNum
 cmap = mpl.cm.rainbow
 for qindex in range(q_size):
     q=qrange[qindex]
@@ -48,11 +48,13 @@ for qindex in range(q_size):
     plt.suptitle(name_string)
     plt.xlabel('$p$')   
     plt.ylabel('$R$')
+    plt.xlim([0.03,0.1])
     plt.ylim([0-0.02,1+0.02])
+    #plt.ylim([0.2, 1])
     #plt.ylim([0.8,1+0.02])*=
     name_string = name_string.replace('$','')
     
     
     location = "results/"
-    #plt.savefig(location+name_string+".png")
+    plt.savefig(location+name_string+".png")
     plt.show()

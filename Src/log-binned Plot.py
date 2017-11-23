@@ -50,45 +50,43 @@ qrange = [ data.pop(0) for i in range(q_size)]
 rrange = [ data.pop(0) for i in range(r_size)]
 
 data =( np.array(data) )
-#data =( np.array(data).reshape(p_size, q_size, runNum) )
+
+data =( np.array(data).reshape(p_size, q_size, runNum) )
 #"""
 #for nindex in [7]:
+rindex = 0
 for nindex in range(n_size):
-    for qindex in range(q_size):
-        n = nrange[nindex]
-        #current_data = data[nindex*runNum : (nindex+1)*runNum]
-        current_data = data[nindex*runNum : (nindex+1)*runNum]
-        binned_data =( binned(current_data, 1, np.max(current_data), 200000, log = True,returnwidth = True ) )
-        binned_data[1] /= (runNum) #normalizing the bin numbers to one to create the probabiltly.
-        binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
-        
-        #plt.bar(binned_data[0], binned_data[1], binned_data[2])
-        plt.plot(binned_data[0], binned_data[1] )
-        #plt.bar(binned_data[0], binned_data[1]/n, binned_data[2])
-
-
-        #plt.bar(binned_data[0], binned_data[1], wi
-        
-        #data_type = " $Primary$ $School: $"
-        dis_type = dis_type.replace('\n','')
-        data_type = data_type.replace('\n','')
-        name_string = dis_type + ", " + data_type + ", $n=$" + str(nrange[nindex]) + ", $p=$" + str(prange[0]) + ", $q=$" + str(qrange[0]) + ", $r=$" + str(rrange[0])
-        plt.suptitle(name_string)
-        #plt.suptitle("$one dis$ ,$Erdos$, $p= %.2f$, $q= %.2f$ , $r= %.2f$, $N= %d$"%(prange[0],qrange[qindex],rrange[0],n))
-        #plt.ylim([10**-13,10**2])
-        #plt.xlim([10**0,10**5])
-        plt.xlabel('$mass$')
-        plt.ylabel('$P(m)$')
-        plt.gca().set_xscale("log")
-        plt.gca().set_yscale("log")
-        #plt.savefig("n"%n)
-        #plt.savefig("n="+str(n)+", p="+str(prange[0])+ ", q=" + str(qrange[qindex]) + ", r=" + str(rrange[0]) + ".png")
-        location = "results/"
-        name_string = name_string.replace('$','')
-        plt.savefig(location+name_string+".png")
-        #plt.savefig("one_ dis"+"n="+str(n)+", p="+str(prange[0])+ ", q=" + str(qrange[qindex]) + ", r=" + str(rrange[0]) + ".png")
+    for pindex in range(p_size):
+        for qindex in range(q_size):
+            #plt.plot(prange, data[:,qindex,:],'o' , color='g', alpha=opacity_num )
+            current_data = data[pindex, qindex, :]
     
-        plt.show()
+            n = nrange[nindex]
+            #current_data = data[nindex*runNum : (nindex+1)*runNum]
+            #current_data = data[nindex*runNum : (nindex+1)*runNum]
+            binned_data =( binned(current_data, 1, np.max(current_data), 200000, log = True,returnwidth = True ) )
+            binned_data[1] /= (runNum) #normalizing the bin numbers to one to create the probabiltly.
+            binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
+            
+            #plt.bar(binned_data[0], binned_data[1], binned_data[2])
+            plt.plot(binned_data[0], binned_data[1] )
+            #plt.bar(binned_data[0], binned_data[1]/n, binned_data[2])
+            #plt.bar(binned_data[0], binned_data[1], wi
+            
+            #data_type = " $Primary$ $School: $"
+            dis_type = dis_type.replace('\n','')
+            data_type = data_type.replace('\n','')
+            name_string = dis_type + ", " + data_type + ", $n=$" + str(nrange[nindex]) + ", $p=$" + str(prange[pindex]) + ", $q=$" + str(qrange[qindex]) + ", $r=$" + str(rrange[rindex])
+            plt.suptitle(name_string)
+            plt.xlabel('$mass$')
+            plt.ylabel('$P(m)$')
+            plt.gca().set_xscale("log")
+            plt.gca().set_yscale("log")
+            location = "results/"
+            name_string = name_string.replace('$','')
+            plt.savefig(location+name_string+".png")
+        
+            plt.show()
         
 
     
