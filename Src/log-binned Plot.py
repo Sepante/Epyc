@@ -1,9 +1,11 @@
-from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 #this function binnes the data, ordinary or log, and can return the width of the bins, for the log situation.
 def binned( data, xmin, xmax, binNum, log = False, returnwidth = False):
     if(log):
+        if(data==[]):
+            return[[],[]]
+        
         data = np.log10(data)
         xmax = np.log10(xmax)
         xmin = np.log10(xmin)
@@ -26,7 +28,7 @@ def binned( data, xmin, xmax, binNum, log = False, returnwidth = False):
             
     if(not log):
         return np.array([np.arange(xmin, xmax, binLen) ,bin_array])
-#"""
+"""
 ##########################
 
 #with open('cdata.txt') as f:
@@ -52,27 +54,44 @@ rrange = [ data.pop(0) for i in range(r_size)]
 data =( np.array(data) )
 
 data =( np.array(data).reshape(p_size, q_size, runNum) )
-#"""
-#for nindex in [7]:
+"""
+opacity_num = 0.8
 rindex = 0
 for nindex in range(n_size):
     for pindex in range(p_size):
         for qindex in range(q_size):
-            #plt.plot(prange, data[:,qindex,:],'o' , color='g', alpha=opacity_num )
-            current_data = data[pindex, qindex, :]
-    
             n = nrange[nindex]
-            #current_data = data[nindex*runNum : (nindex+1)*runNum]
-            #current_data = data[nindex*runNum : (nindex+1)*runNum]
-            binned_data =( binned(current_data, 1, np.max(current_data), 200000, log = True,returnwidth = True ) )
-            binned_data[1] /= (runNum) #normalizing the bin numbers to one to create the probabiltly.
-            binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
+    
+            current_data = data[pindex, qindex, :]
             
+            high_a = current_data[:, 1] > 200
+            high_b = current_data[:, 2] > 200
+            joint_condition = np.logical_and(high_a, high_b)
+            joint_cluster = current_data[joint_condition,0]
+            #in the case that there are 1 or 0 instances.
+            
+            if len(joint_cluster) < 2:
+                binned_data = [[],[]]
+
+            else:
+                binned_data =( binned(joint_cluster, 1, np.max(joint_cluster), 200000, log = True,returnwidth = True ) )
+                binned_data[1] /= (runNum) #normalizing the bin numbers to one to create the probabiltly.
+                binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
+
             #plt.bar(binned_data[0], binned_data[1], binned_data[2])
-            plt.plot(binned_data[0], binned_data[1] )
+            plt.plot(binned_data[0], binned_data[1] , color = 'r', alpha = opacity_num )
             #plt.bar(binned_data[0], binned_data[1]/n, binned_data[2])
             #plt.bar(binned_data[0], binned_data[1], wi
-            
+            single_cluster = current_data[ np.logical_not(joint_condition) , 0]
+            if len(joint_cluster) < 2:
+                binned_data = [[],[]]
+
+            else:
+                binned_data =( binned(single_cluster, 1, np.max(joint_cluster), 200000, log = True,returnwidth = True ) )
+                binned_data[1] /= (runNum) #normalizing the bin numbers to one to create the probabiltly.
+                binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
+
+            plt.plot(binned_data[0], binned_data[1] , color = 'b', alpha = opacity_num )
             #data_type = " $Primary$ $School: $"
             dis_type = dis_type.replace('\n','')
             data_type = data_type.replace('\n','')
@@ -83,7 +102,7 @@ for nindex in range(n_size):
             plt.gca().set_xscale("log")
             plt.gca().set_yscale("log")
             location = "results/"
-            name_string = name_string.replace('$','')
+            name_string = name_string.replace('$','') + "noco"
             plt.savefig(location+name_string+".png")
         
             plt.show()
