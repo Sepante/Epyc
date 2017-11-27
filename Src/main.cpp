@@ -15,8 +15,9 @@
 
 typedef enum { erdos = 1, grid = 2, grid3D = 3, from_file = 4} Graph_Type;
 typedef enum { single = 1, coinfection = 2 } Disease_Type;
+bool grid_output_on = true;
 //Graph_Type graphT = from_file;
-Graph_Type graphT = from_file;
+Graph_Type graphT = erdos;
 Disease_Type disT = coinfection;
 //Graph_Type graphT = grid;
 ///Graph_Type graphT = grid3D;
@@ -31,7 +32,8 @@ std::ifstream  fin;
 float r, p = 0.25, q = 1;
 float percol_prob = 0;
 std::set <int> actives={};
-int runNum = 20000;
+int runNum = 1;
+int time_step_size = 1;
 int R_cluster, a_cluster, b_cluster;
 //int runNum = 200;
 int last_time_step = 0;
@@ -55,12 +57,10 @@ typedef graph_traits<Network>::vertex_iterator Vertex_iter;
 typedef graph_traits<Network>::vertex_descriptor Vertex;
 typedef graph_traits<Network>::edge_descriptor Edge;
 typedef graph_traits<Network>::edge_iterator Edge_iter;
-//Vertex_Num vert_num = 131072;
-Vertex_Num vert_num = 256;
-//float cnct_prob = (float)4/(float)vert_num;
-//float cnct_prob = 1;
 
-//Network society(vert_num);
+Vertex_Num vert_num = 256;
+
+
 Network society(8);
 
 void init_states()
@@ -160,6 +160,22 @@ void cons_grid(int n)
 	}
 }
 
+void grid_output(int n, std::ofstream& tout)
+{
+	int l = sqrt(n);
+	for (size_t i = 0; i < l; i++)
+	{
+		for (size_t j = 0; j < l; j++)
+		{
+			tout << society[i*l + j].health;
+			if(j == l-1)
+				break;
+			tout << ", ";
+		}
+		tout << "\n";
+	}
+}
+
 void cons_grid3D(int n)
 {
 	society.clear();
@@ -236,15 +252,17 @@ int readfile(int t)
   fin.seekg(read_location, fin.beg);
 	return read_time;
 }
-
 int main()
 {
 	int starting_time = 0;
 	clock_t begin = clock();
 	std::ofstream fout;
+	std::ofstream tout;
+
 	std::string file_name;
 	fout.open("cdata.txt");
-
+	tout.open("grid_visualize.csv");
+	//tout<< "something" << ", " <<'\n';
 	//fout.open(file_name);
 	if(disT == coinfection)
 		fout<<"$Coinfection$\n";
@@ -271,19 +289,20 @@ int main()
 	//srand(0);
 	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
 	//std::vector<int> n_set={16384};
-	std::vector<int> n_set={512};
-	std::vector<float> p_set={0.1, 0.15, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9, 1};
+	std::vector<int> n_set={16};
+	std::vector<float> p_set={0.1, 0.15, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9};
 	//std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
 	std::vector<float> r_set={0.1 ,0.5, 0.8, 1};
-	//n_set = {4};
+	//p_set = {0.8};
 	q_set={1};
-	p_set = {0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13};
-	//p_set = {0.1, 0.4, 0.5};
-	p_set = {0.08};
-	//p_set = {0.35, 0.40};
-	r_set={0.01};
-	//r_set={1};
+	//p_set = {0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13};
+	//p_set = {0.08};
+	//p_set = {0.03,0.04};
+	p_set = {0.6};
+	//p_set = {0.1, 0.2,0.3,0.4};
+	r_set={1};
+	//r_set={0.01};
 	r = r_set[0];
 	//write system properties to file, for later use in python.
 	fout<<n_set.size()<<"\n";
@@ -336,12 +355,15 @@ int main()
 						restart_read_file();
 						starting_time = readfile(0);
 						restart_read_file();
+						time_step_size = 20;
 					}
 
 					init_states();
-					for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t+=20)
+					for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t += time_step_size)
 					//for (size_t t = 0; t <= 900 && actives.size() >= 1 ; t++)
 					{
+						if(grid_output_on)
+							grid_output(vert_num, tout);
 						if (graphT == from_file)
 						{
 							last_time_step = readfile(t);
@@ -375,7 +397,9 @@ int main()
 							}
 						}
 					}
-					if(run % 200 == 0)
+					if(grid_output_on)
+						grid_output(vert_num, tout);
+					if(run % 5000 == 0)
 					{
 						if(graphT == erdos)
 						{
