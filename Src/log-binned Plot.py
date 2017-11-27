@@ -28,34 +28,8 @@ def binned( data, xmin, xmax, binNum, log = False, returnwidth = False):
             
     if(not log):
         return np.array([np.arange(xmin, xmax, binLen) ,bin_array])
-"""
-##########################
 
-#with open('cdata.txt') as f:
-with open('cdata.txt') as f:
-    #for i in range(1):
-    dis_type=(f.readline())
-    data_type=(f.readline())
-    
-    data=[float(i) for i in f]
-
-
-n_size = int(data.pop(0))
-#n = int(data.pop(0))
-p_size = int(data.pop(0))
-q_size = int(data.pop(0))
-r_size = int(data.pop(0))
-runNum = int(data.pop(0))
-nrange = [ int(data.pop(0)) for i in range(n_size)]
-prange = [ data.pop(0) for i in range(p_size)]
-qrange = [ data.pop(0) for i in range(q_size)]
-rrange = [ data.pop(0) for i in range(r_size)]
-
-data =( np.array(data) )
-
-data =( np.array(data).reshape(p_size, q_size, runNum) )
-"""
-opacity_num = 0.8
+opacity_num = 0.5
 rindex = 0
 for nindex in range(n_size):
     for pindex in range(p_size):

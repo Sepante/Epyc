@@ -2,36 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 #from data_reader import datareader
 #import data_reader
-
-"""
-with open('cdata.txt') as f:
-    #for i in range(1):
-    dis_type=(f.readline())
-    data_type=(f.readline())
-    
-    data=[float(i) for i in f]
-
-n_size = int(data.pop(0))
-#n = int(data.pop(0))
-p_size = int(data.pop(0))
-q_size = int(data.pop(0))
-r_size = int(data.pop(0))
-runNum = int(data.pop(0))
-nrange = [ int(data.pop(0)) for i in range(n_size)]
-prange = [ data.pop(0) for i in range(p_size)]
-qrange = [ data.pop(0) for i in range(q_size)]
-rrange = [ data.pop(0) for i in range(r_size)]
-
-
-
-#print (data.count(50))
-data =( np.array(data).reshape(p_size, q_size, runNum) )
-nindex = 0
-rindex = 0
 n = nrange[nindex]
-#n = 100
-"""
-n=243
+#n=243
 opacity_num = 0.5
 for pindex in range(p_size):
     for qindex in range(q_size):
