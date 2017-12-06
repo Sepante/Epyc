@@ -5,6 +5,8 @@ import pandas as pd
 with open('cdata.txt') as f:
     dis_type=(f.readline())
     data_type=(f.readline())
+    dis_type = dis_type.replace('\n','')
+    data_type = data_type.replace('\n','')
     
     n_size = int(f.readline())
     p_size = int(f.readline())

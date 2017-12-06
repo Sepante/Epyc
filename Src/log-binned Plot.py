@@ -29,21 +29,23 @@ def binned( data, xmin, xmax, binNum, log = False, returnwidth = False):
     if(not log):
         return np.array([np.arange(xmin, xmax, binLen) ,bin_array])
 
-opacity_num = 0.5
+opacity_num = 0.6
 rindex = 0
+n = nrange[nindex]
 for nindex in range(n_size):
     for pindex in range(p_size):
         for qindex in range(q_size):
-            n = nrange[nindex]
-    
             current_data = data[pindex, qindex, :]
             
-            high_a = current_data[:, 1] > 200
-            high_b = current_data[:, 2] > 200
-            joint_condition = np.logical_and(high_a, high_b)
-            joint_cluster = current_data[joint_condition,0]
-            #in the case that there are 1 or 0 instances.
+            #high_a = current_data[:, 1] > -1
+            #high_b = current_data[:, 2] > -1
+            #joint_condition = np.logical_and(high_a, high_b)
+            #joint_cluster = current_data[joint_condition, 0]
+            #joint_cluster = np.sum(current_data[joint_condition, :],1)
+            joint_cluster = np.sum( data[pindex, qindex, :] ,1)
+
             
+            #in the case that there are only 1 or 0 instances.            
             if len(joint_cluster) < 2:
                 binned_data = [[],[]]
 
@@ -53,40 +55,45 @@ for nindex in range(n_size):
                 binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
 
             #plt.bar(binned_data[0], binned_data[1], binned_data[2])
-            plt.plot(binned_data[0], binned_data[1] , color = 'r', alpha = opacity_num )
+            plt.plot(binned_data[0], binned_data[1] , color = 'purple', alpha = opacity_num )
             #plt.bar(binned_data[0], binned_data[1]/n, binned_data[2])
             #plt.bar(binned_data[0], binned_data[1], wi
+            """
             single_cluster = current_data[ np.logical_not(joint_condition) , 0]
-            if len(joint_cluster) < 2:
+            single_cluster = current_data[joint_condition, 1]
+            if len(single_cluster) < 2:
                 binned_data = [[],[]]
 
             else:
-                binned_data =( binned(single_cluster, 1, np.max(joint_cluster), 200000, log = True,returnwidth = True ) )
+                binned_data =( binned(single_cluster, 1, np.max(single_cluster), 200000, log = True,returnwidth = True ) )
                 binned_data[1] /= (runNum) #normalizing the bin numbers to one to create the probabiltly.
                 binned_data[1] /= (binned_data[2]+1) #changing the probabilty distribution to the probability density.
 
             plt.plot(binned_data[0], binned_data[1] , color = 'b', alpha = opacity_num )
+            """
             #data_type = " $Primary$ $School: $"
-            dis_type = dis_type.replace('\n','')
-            data_type = data_type.replace('\n','')
-            name_string = dis_type + ", " + data_type + ", $n=$" + str(nrange[nindex]) + ", $p=$" + str(prange[pindex]) + ", $q=$" + str(qrange[qindex]) + ", $r=$" + str(rrange[rindex])
+            p_str = '{0:04.3f}'.format(prange[pindex])
+            q_str = '{0:04.3f}'.format(qrange[qindex])
+            #n_str = '{:05d}'.format(nrange[nindex])
+            n_str = '{:d}'.format(nrange[nindex])
+            r_str = '{0:04.3f}'.format(rrange[rindex])
+            name_string = dis_type + ", " + data_type + ", $n=$" + n_str + ", $p=$" + p_str + ", $q=$" + q_str + ", $r=$" + r_str
             plt.suptitle(name_string)
             plt.xlabel('$mass$')
             plt.ylabel('$P(m)$')
+            #plt.xlim([300,n])
+            #plt.ylim([10**(-4),1])
             plt.gca().set_xscale("log")
             plt.gca().set_yscale("log")
-            location = "results/"
-            name_string = name_string.replace('$','') + "noco"
+            #location = "results/"
+            location = "results/for_compare/"
+            name_string = name_string.replace('$','')
             plt.savefig(location+name_string+".png")
         
             plt.show()
         
 
     
-    #plt.ylim([0,10000])
-    #plt.plot(Q[0],Q[1])
-    #plt.gca().set_xscale("log")
-    #plt.gca().set_yscale("log")
     
 #"""
 

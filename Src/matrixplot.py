@@ -51,6 +51,7 @@ for t, anim_step in enumerate(vis_data):
     num_string = '{:04d}'.format(t)
     plt.suptitle(name_string+", step: "+num_string)
     if t%10==0:
+        print(t)
         plt.savefig(location+name_string+", step: "+num_string+".png")
     
     #print(anim_step)
