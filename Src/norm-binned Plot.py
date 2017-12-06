@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from data_reader import *
+
 #from data_reader import datareader
 #import data_reader
 n = nrange[nindex]

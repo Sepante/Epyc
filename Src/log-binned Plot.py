@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from data_reader import *
+
 #this function binnes the data, ordinary or log, and can return the width of the bins, for the log situation.
 def binned( data, xmin, xmax, binNum, log = False, returnwidth = False):
     if(log):
