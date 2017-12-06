@@ -13,6 +13,7 @@ for line in nx.generate_edgelist(G, data=False):
 f = open('input_matrix.txt', 'w')
 time = 0
 times = []
+"""
 for i in range(100000):
     #print (i)
     time += np.random.exponential(1)
@@ -22,7 +23,13 @@ for i in range(100000):
     #string = str(int(i/2)) + ' ' + edge  + '\n'
     print (string)
     f.write(string)
-
+"""
+for t in range(1,1000):
+    print(t)
+    for edge in edge_list:
+        string = str(int(t)) + ' ' + edge  + '\n'
+        f.write(string)
+"""
 times = np.array(times)
 #diffs = np.diff(times)
 m = np.mean(times)
@@ -33,3 +40,4 @@ print (b)
 #print (nx.average_degree_connectivity(graph))
 #plt.show()
 #nx.draw(graph)
+"""

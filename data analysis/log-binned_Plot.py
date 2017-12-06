@@ -87,8 +87,7 @@ for nindex in range(n_size):
             #plt.ylim([10**(-4),1])
             plt.gca().set_xscale("log")
             plt.gca().set_yscale("log")
-            #location = "results/"
-            location = "results/for_compare/"
+
             name_string = name_string.replace('$','')
             plt.savefig(location+name_string+".png")
         

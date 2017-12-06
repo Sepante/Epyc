@@ -1,7 +1,7 @@
 #!/bin/bash
 
 python3 matrixplot.py
-cd results/grid_animation
+cd ../Results/grid_animation
 
 filename+="animation"$(date +"%T")
 filename+=".mp4"

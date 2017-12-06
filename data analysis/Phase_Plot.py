@@ -39,6 +39,5 @@ for qindex in range(q_size):
         name_string = name_string.replace('$','')
         
         
-        location = "results/"
     plt.savefig(location + name_string+".png")
     plt.show()

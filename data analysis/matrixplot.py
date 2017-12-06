@@ -2,9 +2,10 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import pandas as pd
+from data_reader import *
 from pylab import *
 
-with open('cdata.txt') as f:
+"""with open('cdata.txt') as f:
     dis_type=(f.readline())
     data_type=(f.readline())
     
@@ -20,8 +21,8 @@ with open('cdata.txt') as f:
     qrange = [ float(f.readline()) for i in range(q_size) ]
     rrange = [ float(f.readline()) for i in range(r_size) ]
 pindex = nindex = rindex = qindex = 0
-
-with open('grid_visualize.csv') as f:
+"""
+with open('../Results/grid_visualize.csv') as f:
     pn_data = pd.read_csv(f, index_col = False, header = None)
 
 dis_type = dis_type.replace('\n','')
@@ -44,13 +45,13 @@ norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 num_string = '{:04d}'.format(10)
 
 images = []
-location = "results/grid_animation/"
+location += "grid_animation/"
 for t, anim_step in enumerate(vis_data):
     imshow(anim_step, cmap = cmap, norm = norm, interpolation='nearest')
     #grid(True)
     num_string = '{:04d}'.format(t)
     plt.suptitle(name_string+", step: "+num_string)
-    if t%10==0:
+    if t%1==0:
         print(t)
         plt.savefig(location+name_string+", step: "+num_string+".png")
     

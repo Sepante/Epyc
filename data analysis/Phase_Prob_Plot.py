@@ -30,7 +30,7 @@ for qindex in range(q_size):
     #plt.xlim([0.01,0.06])
     name_string = plt_title.replace('$','')
     qq = name_string
-    location = "results/"
+
     plt.savefig(location + "p_ab, " + name_string + ".png")
     plt.show()
     #"""

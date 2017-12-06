@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-with open('cdata.txt') as f:
+with open('../Results/cdata.txt') as f:
     dis_type=(f.readline())
     data_type=(f.readline())
     dis_type = dis_type.replace('\n','')
@@ -25,4 +25,5 @@ with open('cdata.txt') as f:
 
 data = np.array(pd_data)
 data = np.array(data).reshape(p_size, q_size, runNum,3)
-nindex = rindex = pindex = 0
+nindex = rindex = pindex = qindex = 0
+location = "../Results/"
