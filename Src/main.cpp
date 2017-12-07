@@ -34,7 +34,7 @@ float percol_prob = 0;
 std::set <int> actives={};
 int runNum = 1;
 int time_step_size = 1;
-int R_cluster, a_cluster, b_cluster;
+int ab_cluster, a_cluster, b_cluster;
 //int runNum = 200;
 int last_time_step = 0;
 bool file_ended = false;
@@ -101,17 +101,25 @@ void cluster_size()
 {
 	a_cluster = 0;
 	b_cluster = 0;
-	R_cluster = 0;
+	ab_cluster = 0;
 	for( Vertex vd : make_iterator_range( vertices(society) ) )
 	{
+		/*
 		if (society[vd].health != 1)
 		{
-			R_cluster++;
+			ab_cluster++;
 		if (society[vd].health % 2 == 0 )
 			a_cluster++;
 		if (society[vd].health % 3 == 0 )
 			b_cluster++;
 		}
+		*/
+		if (society[vd].health % 6 == 0)
+			ab_cluster++;
+		else if (society[vd].health % 2 == 0)
+			a_cluster++;
+		else if (society[vd].health % 3 == 0)
+			b_cluster++;
 	}
 }
 /*
@@ -289,22 +297,22 @@ int main()
 	}
 	srand(time(0));
 	//srand(0);
-	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
+		//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
 	//std::vector<int> n_set={16384};
-	std::vector<int> n_set={16};
-	std::vector<float> p_set={0.1, 0.15, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9};
+	std::vector<int> n_set={1024};
+	std::vector<float> p_set={0.1, 0.15, 0.17, 0.19, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9};
 	//std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
 	std::vector<float> r_set={0.1 ,0.5, 0.8, 1};
-	//p_set = {0.8};
-	q_set={1};
-	//p_set = {0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13};
-	//p_set = {0.08};
-	//p_set = {0.03,0.04};
-	p_set = {0.6};
+	p_set={0.25};
+	//p_set = {0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28 ,0.30, 0.32, 0.34, 0.36, 0.38, 0.4};
+	//p_set={0.01, 0.02, 0.03, 0.035, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10};
+	//p_set = {0.3, 0.35, 0.4, 0.45, 0.5	};
+	q_set = {1};
+	//r_set = {1};
 	//p_set = {0.1, 0.2,0.3,0.4};
+	r_set={0.01};
 	r_set={1};
-	//r_set={0.01};
 	r = r_set[0];
 	//write system properties to file, for later use in python.
 	fout<<n_set.size()<<"\n";
@@ -322,7 +330,7 @@ int main()
 	for(int rindex=0; rindex<=r_set.size()-1; rindex++)
 		fout<<r_set[rindex]<<"\n";
 
-		fout<<"R_cluster, a_cluster, b_cluster"<<'\n';
+		fout<<"ab_cluster, a_cluster, b_cluster"<<'\n';
 
 	for(int nindex=0; nindex<n_set.size(); nindex++)
 	{
@@ -401,7 +409,7 @@ int main()
 					}
 					if(grid_output_on)
 						grid_output(vert_num, tout);
-					if(run % 5000 == 0)
+					if(run % 500 == 0)
 					{
 						if(graphT == erdos)
 						{
@@ -421,8 +429,8 @@ int main()
 						}
 					}
 					cluster_size();
-					//fout << R_cluster << '\n';
-					fout << R_cluster;
+					//fout << ab_cluster << '\n';
+					fout << ab_cluster;
 					fout <<", " << a_cluster;
 					fout <<", " << b_cluster << '\n';
 				}
