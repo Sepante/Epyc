@@ -67,3 +67,5 @@ cdata.txt
 */*.csv
 *.zip
 trial.py
+*.mp4
+*.pyc
