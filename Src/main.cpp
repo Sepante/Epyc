@@ -201,7 +201,7 @@ void restart_read_file()
   fin.seekg(0, fin.beg);
   fin.close();
   //fin.open("input_matrix.txt");
-	fin.open("clean_input_matrix.txt");
+	fin.open("../Graph data/clean_input_matrix.txt");
   if (!fin)
   {
     std::cerr << "Unable to open file datafile.txt";
