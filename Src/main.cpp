@@ -258,10 +258,12 @@ int main()
 	clock_t begin = clock();
 	std::ofstream fout;
 	std::ofstream tout;
-
+	//if we want an animation, one run is enough.
+	if(grid_output_on)
+		runNum = 1;
 	std::string file_name;
-	fout.open("cdata.txt");
-	tout.open("grid_visualize.csv");
+	fout.open("../Results/cdata.txt");
+	tout.open("../Results/grid_visualize.csv");
 	//tout<< "something" << ", " <<'\n';
 	//fout.open(file_name);
 	if(disT == coinfection)
