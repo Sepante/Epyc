@@ -52,9 +52,8 @@ for pindex in range(p_size):
         plt.xlabel('$mass$')
         plt.ylabel('$P(m)$')
 
-        location = "results/"
         name_string = name_string.replace('$','')
-        plt.ylim([0,0.01])
+        #plt.ylim([0,0.01])
         plt.xlim([0,n])
         
         plt.savefig(location+name_string+".png")
