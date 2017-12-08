@@ -209,7 +209,7 @@ void restart_read_file()
   fin.seekg(0, fin.beg);
   fin.close();
   //fin.open("input_matrix.txt");
-	fin.open("../Graph data/clean_input_matrix.txt");
+	fin.open("../Graph_data/clean_input_matrix.txt");
   if (!fin)
   {
     std::cerr << "Unable to open file datafile.txt";
@@ -232,7 +232,7 @@ int readfile(int t)
 		return 9999999;
 	}
   std::string temp;
-  int read_time, i, j;
+  int read_time, prev_read_time, i, j;
   auto read_location = fin.tellg() ;
 
 
@@ -244,6 +244,7 @@ int readfile(int t)
 			break;
 		}
     read_location = fin.tellg() ;
+		prev_read_time = read_time;
     fin >> read_time;
     if (read_time > t)
 		{
@@ -258,7 +259,7 @@ int readfile(int t)
 
   fin.clear();
   fin.seekg(read_location, fin.beg);
-	return read_time;
+	return prev_read_time;
 }
 int main()
 {
