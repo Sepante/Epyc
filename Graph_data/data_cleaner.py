@@ -41,16 +41,3 @@ non_zeros_ind = q != 0
 
 q = q[non_zeros_ind]
 print(min(q))
-edge_count = pd.Series(data[:, 0])
-edge_count = edge_count.value_counts()
-edge_count = edge_count.sort_index()
-edge_count = np.array(edge_count.reset_index())
-c_grain_size = 200
-splitted_edge = np.array_split(edge_count[:,1],c_grain_size)
-splitted_time = np.array_split(edge_count[:,0],c_grain_size)
-c_grained_count_edge = [np.mean(inst) for inst in splitted_edge]
-c_grained_count_time = [np.mean(inst) for inst in splitted_time]
-#c_grained_count_x = np.mean(np.array_split(edge_count[:,0],c_grain_size),1)
-
-#plt.plot(edge_count[::20,0],edge_count[::20,1],'-o')
-plt.plot(c_grained_count_time, c_grained_count_edge, '-o')
