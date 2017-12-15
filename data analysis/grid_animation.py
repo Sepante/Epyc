@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from data_reader import *
 from pylab import *
+import time
 
 with open('../Results/grid_visualize.csv') as f:
     pn_data = pd.read_csv(f, index_col = False, header = None)
@@ -31,7 +32,7 @@ num_string = '{:04d}'.format(10)
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
 #images = []
-location += "grid_animation/"
+location += "../Results/grid_animation/"
 
 #for t, anim_step in enumerate(vis_data):
 def animate(t):
@@ -52,4 +53,5 @@ ani = animation.FuncAnimation(fig, animate, interval = 60000, save_count = total
 
 dpi = 200
 writer = animation.writers['ffmpeg'](fps = 10)
-ani.save('test.mp4',writer=writer,dpi=dpi)
+file_name = location + str(time.gmtime()[0:5]) + '.mp4'
+ani.save( file_name , writer=writer,dpi=dpi)
