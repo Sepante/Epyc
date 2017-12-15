@@ -5,10 +5,10 @@ from data_reader import *
 
 n = 243
 #n = nrange[nindex]
-norm_data = data / nrange[nindex]
+norm_data = data / n
 
-opacity_num =  20/runNum
-
+opacity_num =  200/runNum
+#opacity_num = 0.01
 cmap = mpl.cm.rainbow
 for qindex in range(q_size):
     q=qrange[qindex]
