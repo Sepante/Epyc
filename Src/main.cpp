@@ -15,10 +15,10 @@
 
 typedef enum { erdos = 1, grid = 2, grid3D = 3, from_file = 4} Graph_Type;
 typedef enum { single = 1, coinfection = 2 } Disease_Type;
-bool grid_output_on = true;
-//Graph_Type graphT = from_file;
-Graph_Type graphT = erdos;
-Disease_Type disT = coinfection;
+bool grid_output_on = false;
+Graph_Type graphT = from_file;
+//Graph_Type graphT = erdos;
+Disease_Type disT = single;
 //Graph_Type graphT = grid;
 ///Graph_Type graphT = grid3D;
 
@@ -32,12 +32,13 @@ std::ifstream  fin;
 float r, p = 0.25, q = 1;
 float percol_prob = 0;
 std::set <int> actives={};
-int runNum = 1;
+int runNum = 5000;
 int time_step_size = 1;
 int ab_cluster, a_cluster, b_cluster;
 //int runNum = 200;
 int last_time_step = 0;
 bool file_ended = false;
+int read_time = 0, prev_read_time = 0; //used in readfile
 
 
 //typedef enum { neither, dis_one, dis_two, both } State;
@@ -203,13 +204,15 @@ void cons_grid3D(int n)
 
 void restart_read_file()
 {
+	read_time = 0, prev_read_time = 0;
 	file_ended = false;
   //std::cout << "rest!" << '\n';
   //fin.clear();
   fin.seekg(0, fin.beg);
   fin.close();
   //fin.open("input_matrix.txt");
-	fin.open("../Graph_data/clean_input_matrix.txt");
+	//fin.open("../Graph_data/clean_input_matrix.txt");
+	fin.open("../Graph_data/burst_creator/burst_graph.txt");
   if (!fin)
   {
     std::cerr << "Unable to open file datafile.txt";
@@ -224,7 +227,7 @@ int readfile(int t)
 	for (next = vi; vi != vi_end; vi = next)
 	{
 		++next;
-			remove_edge(*vi, society);
+		remove_edge(*vi, society);
 	}
 	if (file_ended) // if the file is ended, break the function.
 	{
@@ -232,7 +235,7 @@ int readfile(int t)
 		return 9999999;
 	}
   std::string temp;
-  int read_time, prev_read_time, i, j;
+  int i, j;
   auto read_location = fin.tellg() ;
 
 
@@ -244,7 +247,12 @@ int readfile(int t)
 			break;
 		}
     read_location = fin.tellg() ;
-		prev_read_time = read_time;
+
+		if(read_time <= t)
+		{
+			prev_read_time = read_time;
+		}
+
     fin >> read_time;
     if (read_time > t)
 		{
@@ -259,8 +267,9 @@ int readfile(int t)
 
   fin.clear();
   fin.seekg(read_location, fin.beg);
-	return prev_read_time;
+	return (prev_read_time);
 }
+
 int main()
 {
 	int starting_time = 0;
@@ -271,7 +280,8 @@ int main()
 	if(grid_output_on)
 		runNum = 1;
 	std::string file_name;
-	fout.open("../Results/cdata.txt");
+	//fout.open("../Results/cdata.txt");
+	fout.open("../Results/cdatab.txt");
 	tout.open("../Results/grid_visualize.csv");
 	//tout<< "something" << ", " <<'\n';
 	//fout.open(file_name);
@@ -305,15 +315,16 @@ int main()
 	//std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
 	std::vector<float> r_set={0.1 ,0.5, 0.8, 1};
-	p_set={0.25};
+	p_set={1};
+	//p_set={0.25};
 	//p_set = {0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28 ,0.30, 0.32, 0.34, 0.36, 0.38, 0.4};
-	//p_set={0.01, 0.02, 0.03, 0.035, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10};
+	p_set={0.01, 0.02, 0.03, 0.035, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10};
 	//p_set = {0.3, 0.35, 0.4, 0.45, 0.5	};
 	q_set = {1};
 	//r_set = {1};
 	//p_set = {0.1, 0.2,0.3,0.4};
-	r_set={0.01};
-	r_set={1};
+	r_set={0.0001};
+	//r_set={1};
 	r = r_set[0];
 	//write system properties to file, for later use in python.
 	fout<<n_set.size()<<"\n";
@@ -363,10 +374,11 @@ int main()
 				{
 					if (graphT == from_file)
 					{
+						time_step_size = 1;
 						restart_read_file();
 						starting_time = readfile(0);
+						//starting_time = 0;
 						restart_read_file();
-						time_step_size = 20;
 					}
 
 					init_states();
@@ -375,10 +387,14 @@ int main()
 					{
 						if(grid_output_on)
 							grid_output(vert_num, tout);
+
 						if (graphT == from_file)
 						{
 							last_time_step = readfile(t);
 						}
+
+						//print_graph(society);
+
 						Vertex vd;
 						for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
 					  {
