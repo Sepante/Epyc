@@ -4,16 +4,21 @@ import scipy as sp
 from scipy.stats import expon
 import scipy.stats as st
 import pandas as pd
+from collections import Counter
+
 
 N = 500000
-graph_size = 256
+graph_size = 50
 #N = 1000
 ld = 0.2
 #cnct = expon.rvs(size=N, loc = 0.1, scale = 0.9)
 #cnct = expon.rvs(size=N, loc = 1, scale = 0)
 #cnct = np.random.poisson(ld, N)/ld
 #cnct = (np.random.binomial(n, p, N)/(n*p))
-cnct = np.random.lognormal( np.log(np.e), 0, N)
+
+cnct = np.random.lognormal( np.log(np.e), 3, N)
+#cnct = np.random.lognormal( np.log(np.e), 0, N)
+
 #cnct = st.lognorm.rvs( 1, 1 , size=N )
 #cnct = st.powerlaw.rvs( 100000, -1, size=N )
 #cnct = np.random.lognormal(np.log10(10000),2,N)
@@ -45,6 +50,7 @@ graph[:, 1:] = np.random.randint(0,graph_size,[N,2])
 
 
 output = open('burst_graph.txt', 'w')
-#output.write("salam")
+
 t_respect_graph = pd.DataFrame(graph)
 t_respect_graph.to_csv('burst_graph.txt',index = False, header = False, sep = '\t') 
+print("burst = ",burst)
