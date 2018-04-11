@@ -95,3 +95,12 @@ Transfer SIR::update() // updates the future (which is used to calculate the sup
 	future = health;
 	return supply();
 }
+
+
+/*
+void SIR::turn_R(Transfer dis) //used only in the gillespie algorithm form for recoveries.
+{
+	health *= dis;
+	future *= dis;
+}
+*/
