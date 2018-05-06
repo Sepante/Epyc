@@ -8,7 +8,7 @@ from collections import Counter
 
 
 N = 500000
-graph_size = 200
+graph_size = 81
 #N = 1000
 ld = 0.2
 #cnct = expon.rvs(size=N, loc = 0.1, scale = 0.9)
