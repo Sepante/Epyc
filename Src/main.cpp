@@ -13,14 +13,19 @@
 #include <boost/config.hpp>
 #include <boost/graph/connected_components.hpp>
 
-typedef enum { erdos = 1, grid = 2, grid3D = 3, from_file = 4} Graph_Type;
-typedef enum { single = 1, coinfection = 2 } Disease_Type;
-bool grid_output_on = false;
-Graph_Type graphT = from_file;
-//Graph_Type graphT = erdos;
-Disease_Type disT = single;
+enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4};
+enum Disease_Type { single = 1, coinfection = 2 } ;
+enum Reshuffle { none = 0, erdos_reshuffle = 1, grid_reshuffle = 2 } ;
+//Reshuffle burst_reshuffle = grid_reshuffle;
+Reshuffle burst_reshuffle = none;
+const bool grid_output_on = false;
+bool timed_output_on = false;
+
+//Graph_Type graphT = from_file;
+Graph_Type graphT = erdos;
+Disease_Type disT = coinfection;
 //Graph_Type graphT = grid;
-///Graph_Type graphT = grid3D;
+//Graph_Type graphT = grid3D;
 
 using namespace boost;
 using std::cout;
