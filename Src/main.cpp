@@ -101,7 +101,6 @@ void init_states()
 */
 	//society[v].health = 2;
 	//society[v].future = 2;
-
 	//std::cout << "seed: " << seed << '\n';
 }
 
@@ -401,7 +400,7 @@ int main()
 				//for now!
 				//q = p;
 
-				for (size_t run = 0; run < runNum; run++)
+				for (run = 0; run < runNum; run++)
 				{
 					if (graphT == from_file)
 					{
@@ -443,12 +442,13 @@ int main()
 								}
 							}
 					  }
+						//what the hell is this "for" for? let's disable it.
+						/*
 						for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
 						{
 							vd = *it;
 						}
-
-
+						*/
 						actives = {};
 						for( Vertex vd : make_iterator_range( vertices(society) ) )
 						{
