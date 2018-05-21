@@ -33,7 +33,7 @@ Transfer SIR::supply() //returns the supply value of the node.
 			}
 			else return neither;
 	};
-void SIR::turn_I(Transfer supply) // transfers diseases, usins chances p & q.
+void SIR::turn_I(Transfer supply) // transfers diseases, using chances p & q.
 {
 		Transfer demand_v = demand();
 		switch (demand_v)
