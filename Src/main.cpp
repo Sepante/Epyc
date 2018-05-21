@@ -278,6 +278,29 @@ int readfile(int t)
 	return (prev_read_time);
 }
 
+void get_out_put()
+{
+	if(graphT == erdos)
+	{
+		std::cout << "Erdos: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+	}
+	else if(graphT == grid)
+	{
+		std::cout << "Grid: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+	}
+	else if(graphT == grid3D)
+	{
+		std::cout << "3D Grid: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+	}
+	else if(graphT == from_file)
+	{
+		std::cout << "file: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run <<", last_time_step: " << last_time_step << '\n';
+	}
+	//cluster_size();
+	//cout << (a_cluster + b_cluster + ab_cluster) << '\n';
+}
+
+
 int main()
 {
 	int starting_time = 0;
@@ -396,6 +419,9 @@ int main()
 						if(grid_output_on)
 							grid_output(vert_num, tout);
 
+						if(timed_output_on)
+							get_out_put();
+
 						if (graphT == from_file)
 						{
 							last_time_step = readfile(t);
@@ -434,24 +460,20 @@ int main()
 					}
 					if(grid_output_on)
 						grid_output(vert_num, tout);
-					if(run % 500 == 0)
+					if(run % 1000 == 0)
 					{
-						if(graphT == erdos)
+						//temporal!!!!
+						if (burst_reshuffle == grid_reshuffle)
 						{
-							std::cout << "Erdos: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+							system("./grid_shuffle.sh");
 						}
-						else if(graphT == grid)
+						else if (burst_reshuffle == erdos_reshuffle)
 						{
-							std::cout << "Grid: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+							system("./erdos_shuffle.sh");
 						}
-						else if(graphT == grid3D)
-						{
-							std::cout << "3D Grid: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
-						}
-						else if(graphT == from_file)
-						{
-							std::cout << "file: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run <<", last_time_step: " << last_time_step << '\n';
-						}
+
+						get_out_put();
+///////////////////////
 					}
 					cluster_size();
 					//fout << ab_cluster << '\n';
