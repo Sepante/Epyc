@@ -67,15 +67,14 @@ typedef graph_traits<Network>::edge_iterator Edge_iter;
 Vertex_Num vert_num = 256;
 
 
-Network society(8);
+Network society(3);
 
 void init_states()
 {
 
 	for( Vertex vd : make_iterator_range( vertices(society) ) )
 	{
-		society[vd].health = 1;
-		society[vd].future = 1;
+		society[vd].refresh();
 	}
 	actives = {};
 
@@ -88,8 +87,11 @@ void init_states()
 
 	int seed = rand() % num_vertices(society);
 	actives.insert(seed);
-	society[seed].health *= seed_dis;
-	society[seed].future *= seed_dis;
+	//society[seed].health *= seed_dis;
+	//society[seed].future *= seed_dis;
+	society[seed].set_health( society[seed].get_health() * seed_dis );
+	society[seed].set_future( society[seed].get_future() * seed_dis );
+
 /*
 	//seed = rand() % num_vertices(society);
 	seed = (seed + 1) % num_vertices(society);
@@ -120,11 +122,12 @@ void cluster_size()
 			b_cluster++;
 		}
 		*/
-		if (society[vd].health % 6 == 0)
+
+		if (society[vd].get_health() % 6 == 0)
 			ab_cluster++;
-		else if (society[vd].health % 2 == 0)
+		else if (society[vd].get_health() % 2 == 0)
 			a_cluster++;
-		else if (society[vd].health % 3 == 0)
+		else if (society[vd].get_health() % 3 == 0)
 			b_cluster++;
 	}
 }
@@ -181,7 +184,7 @@ void grid_output(int n, std::ofstream& tout)
 	{
 		for (size_t j = 0; j < l; j++)
 		{
-			tout << society[i*l + j].health;
+			tout << society[i*l + j].get_health();
 			if(j == l-1)
 				break;
 			tout << ", ";
@@ -406,7 +409,7 @@ int main()
 							vd = *it;
 							//std::cout << "vd: "<< vd << '\n';
 							//std::cout << "supply: "<< society[vd].supply() << '\n';
-							if (society[vd].supply() != 1)
+							if (society[vd].supply() != neither)
 							{
 								for ( Vertex vi : make_iterator_range( adjacent_vertices(vd, society) ) )
 								{

@@ -2,7 +2,34 @@
 #include "SIR.h"
 #include <iostream>
 
+//int SIR::health = 1;
+//int SIR::future = 1;
 
+void SIR::set_health(int s)
+{
+	health = s;
+}
+
+void SIR::set_future(int s)
+{
+	future = s;
+}
+
+void SIR::refresh()
+{
+	health = 1;
+	future = 1;
+}
+
+int SIR::get_health()
+{
+	return health;
+}
+
+int SIR::get_future()
+{
+	return future;
+}
 
 Transfer SIR::demand() //returns the demand value of the node.
 {
