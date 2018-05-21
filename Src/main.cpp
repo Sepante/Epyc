@@ -47,16 +47,16 @@ int read_time = 0, prev_read_time = 0; //used in readfile
 
 
 //typedef enum { neither, dis_one, dis_two, both } State;
-
+/*
 class Interaction
 {
 	public:
 	int present = 1;
 };
+*/
 
-
-//typedef adjacency_list<listS, vecS, undirectedS, SIR> Network;
-typedef adjacency_list<setS, vecS, undirectedS, SIR, Interaction> Network;
+//typedef adjacency_list<setS, vecS, undirectedS, SIR, Interaction> Network;
+typedef adjacency_list<listS, vecS, undirectedS, SIR> Network;
 typedef graph_traits<Network>::edges_size_type Edge_Num;
 typedef graph_traits<Network>::vertices_size_type Vertex_Num;
 typedef graph_traits<Network>::vertex_iterator Vertex_iter;
