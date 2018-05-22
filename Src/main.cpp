@@ -46,14 +46,8 @@ int ab_cluster, a_cluster, b_cluster;
 int last_time_step = 0;
 bool file_ended = false;
 int read_time = 0, prev_read_time = 0; //used in readfile
-
-
 //enum { neither, dis_one, dis_two, both } State;
-
-//typedef adjacency_list<setS, vecS, undirectedS, SIR, Interaction> Network;
 Vertex_Num vert_num = 256;
-
-
 Network society(3);
 
 void init_states()
@@ -98,53 +92,12 @@ void cluster_size()
 	ab_cluster = 0;
 	for( Vertex vd : make_iterator_range( vertices(society) ) )
 	{
-		/*
-		if (society[vd].health != 1)
-		{
-			ab_cluster++;
-		if (society[vd].health % 2 == 0 )
-			a_cluster++;
-		if (society[vd].health % 3 == 0 )
-			b_cluster++;
-		}
-		*/
-
 		if (society[vd].get_health() % 6 == 0)
 			ab_cluster++;
 		else if (society[vd].get_health() % 2 == 0)
 			a_cluster++;
 		else if (society[vd].get_health() % 3 == 0)
 			b_cluster++;
-	}
-}
-/*
-void kill_some_edges(float p)
-{
-	Edge_iter vi, vi_end, next;
-	boost::tie(vi, vi_end) = edges(society);
-	for (next = vi; vi != vi_end; vi = next)
-	{
-		++next;
-		if(dice (p) )
-			remove_edge(*vi, society);
-	}
-}
-*/
-
-
-void grid_output(int n, std::ofstream& tout)
-{
-	int l = sqrt(n);
-	for (size_t i = 0; i < l; i++)
-	{
-		for (size_t j = 0; j < l; j++)
-		{
-			tout << society[i*l + j].get_health();
-			if(j == l-1)
-				break;
-			tout << ", ";
-		}
-		tout << "\n";
 	}
 }
 
@@ -215,29 +168,6 @@ int readfile(int t)
   fin.seekg(read_location, fin.beg);
 	return (prev_read_time);
 }
-
-void get_out_put()
-{
-	if(graphT == erdos)
-	{
-		std::cout << "Erdos: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
-	}
-	else if(graphT == grid)
-	{
-		std::cout << "Grid: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
-	}
-	else if(graphT == grid3D)
-	{
-		std::cout << "3D Grid: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
-	}
-	else if(graphT == from_file)
-	{
-		std::cout << "file: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run <<", last_time_step: " << last_time_step << '\n';
-	}
-	//cluster_size();
-	//cout << (a_cluster + b_cluster + ab_cluster) << '\n';
-}
-
 
 int main()
 {
@@ -363,7 +293,7 @@ int main()
 							grid_output(vert_num, tout);
 
 						if(timed_output_on)
-							get_out_put();
+							get_output(graphT, run, last_time_step);
 
 						if (graphT == from_file)
 						{
@@ -416,8 +346,7 @@ int main()
 							system("./erdos_shuffle.sh");
 						}
 
-						get_out_put();
-///////////////////////
+						get_output(graphT, run, last_time_step);
 					}
 					cluster_size();
 					//fout << ab_cluster << '\n';
@@ -428,7 +357,6 @@ int main()
 			}
 		}
 	}
-
 
 	clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
