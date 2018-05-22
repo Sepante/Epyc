@@ -74,16 +74,6 @@ void init_states()
 	society[seed].set_health( society[seed].get_health() * seed_dis );
 	society[seed].set_future( society[seed].get_future() * seed_dis );
 
-/*
-	//seed = rand() % num_vertices(society);
-	seed = (seed + 1) % num_vertices(society);
-	actives.insert(seed);
-	society[seed].health *= seed_dis;
-	society[seed].future *= seed_dis;
-*/
-	//society[v].health = 2;
-	//society[v].future = 2;
-	//std::cout << "seed: " << seed << '\n';
 }
 
 void cluster_size()
@@ -317,13 +307,6 @@ int main()
 								}
 							}
 					  }
-						//what the hell is this "for" for? let's disable it.
-						/*
-						for (std::set<int>::iterator it=actives.begin(); it!=actives.end(); it++)
-						{
-							vd = *it;
-						}
-						*/
 						actives = {};
 						for( Vertex vd : make_iterator_range( vertices(society) ) )
 						{
