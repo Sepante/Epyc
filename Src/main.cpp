@@ -1,5 +1,6 @@
 #include "global.h"
 #include "SIR.h"
+#include "graph_base.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -15,17 +16,18 @@
 
 enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4};
 enum Disease_Type { single = 1, coinfection = 2 } ;
-enum Reshuffle { none = 0, erdos_reshuffle = 1, grid_reshuffle = 2 } ;
+enum Reshuffle { no_shuffle = 0, erdos_reshuffle = 1, grid_reshuffle = 2 } ;
 //Reshuffle burst_reshuffle = grid_reshuffle;
-const Reshuffle burst_reshuffle = none;
-const bool grid_output_on = false;
+const Reshuffle burst_reshuffle = no_shuffle;
+const bool grid_output_on = true;
 const bool timed_output_on = false;
 
 //Graph_Type graphT = from_file;
-Graph_Type graphT = erdos;
+Graph_Type graphT = grid;
 Disease_Type disT = coinfection;
 //Graph_Type graphT = grid;
 //Graph_Type graphT = grid3D;
+
 
 using namespace boost;
 using std::cout;
@@ -46,24 +48,9 @@ bool file_ended = false;
 int read_time = 0, prev_read_time = 0; //used in readfile
 
 
-//typedef enum { neither, dis_one, dis_two, both } State;
-/*
-class Interaction
-{
-	public:
-	int present = 1;
-};
-*/
+//enum { neither, dis_one, dis_two, both } State;
 
 //typedef adjacency_list<setS, vecS, undirectedS, SIR, Interaction> Network;
-typedef adjacency_list<listS, vecS, undirectedS, SIR> Network;
-typedef graph_traits<Network>::edges_size_type Edge_Num;
-typedef graph_traits<Network>::vertices_size_type Vertex_Num;
-typedef graph_traits<Network>::vertex_iterator Vertex_iter;
-typedef graph_traits<Network>::vertex_descriptor Vertex;
-typedef graph_traits<Network>::edge_descriptor Edge;
-typedef graph_traits<Network>::edge_iterator Edge_iter;
-
 Vertex_Num vert_num = 256;
 
 
