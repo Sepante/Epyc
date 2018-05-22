@@ -1,3 +1,7 @@
+#ifndef GRAPH_BASE_H
+#define GRAPH_BASE_H
+
+
 #include <iostream>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_utility.hpp>
@@ -22,3 +26,5 @@ extern Network society;
 void cons_Erdos(int n);
 void cons_grid(int n);
 void cons_grid3D(int n);
+
+#endif

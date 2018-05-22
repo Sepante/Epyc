@@ -1,5 +1,3 @@
-#ifndef GRAPH_BASE_H
-#define GRAPH_BASE_H
 #include "graph_base.h"
 
 void cons_Erdos(int n)
@@ -51,6 +49,3 @@ void cons_grid3D(int n)
 		add_edge(i, j, society);
 	}
 }
-
-
-#endif
