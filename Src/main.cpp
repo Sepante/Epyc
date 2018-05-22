@@ -1,6 +1,7 @@
 #include "global.h"
 #include "SIR.h"
 #include "graph_base.h"
+#include "output_utilities.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -14,7 +15,7 @@
 #include <boost/config.hpp>
 #include <boost/graph/connected_components.hpp>
 
-enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4};
+//enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4};
 enum Disease_Type { single = 1, coinfection = 2 } ;
 enum Reshuffle { no_shuffle = 0, erdos_reshuffle = 1, grid_reshuffle = 2 } ;
 //Reshuffle burst_reshuffle = grid_reshuffle;
