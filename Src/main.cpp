@@ -61,18 +61,20 @@ void init_states()
 	actives = {};
 
 	//Vertex v = vertex(seed, society);
-	int seed_dis;
+	Transfer seed_dis;
 	if(disT == coinfection)
-		seed_dis = 6;
+		seed_dis = both;
 	else if(disT == single)
-		seed_dis = 2;
+		seed_dis = dis_one;
 
 	int seed = rand() % num_vertices(society);
 	actives.insert(seed);
 	//society[seed].health *= seed_dis;
 	//society[seed].future *= seed_dis;
-	society[seed].set_health( society[seed].get_health() * seed_dis );
-	society[seed].set_future( society[seed].get_future() * seed_dis );
+	//society[seed].set_health( society[seed].get_health() * seed_dis );
+	//society[seed].set_future( society[seed].get_future() * seed_dis );
+	//society[seed].turn_I( seed_dis );
+	society[seed].set_seed(seed_dis);
 
 }
 

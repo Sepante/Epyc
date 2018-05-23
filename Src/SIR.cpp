@@ -2,9 +2,7 @@
 #include "SIR.h"
 #include <iostream>
 
-//int SIR::health = 1;
-//int SIR::future = 1;
-
+/*
 void SIR::set_health(int s)
 {
 	health = s;
@@ -14,6 +12,7 @@ void SIR::set_future(int s)
 {
 	future = s;
 }
+*/
 
 void SIR::refresh()
 {
@@ -123,6 +122,11 @@ Transfer SIR::update() // updates the future (which is used to calculate the sup
 	return supply();
 }
 
+void SIR::set_seed(Transfer dis)
+{
+	health *= dis;
+	future *= dis;
+}
 
 /*
 void SIR::turn_R(Transfer dis) //used only in the gillespie algorithm form for recoveries.

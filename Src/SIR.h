@@ -23,6 +23,7 @@ class SIR
 	void turn_I(Transfer supply);
 	Transfer update();
 
+	void set_seed(Transfer dis);
 };
 
 
