@@ -2,18 +2,6 @@
 #include "SIR.h"
 #include <iostream>
 
-/*
-void SIR::set_health(int s)
-{
-	health = s;
-}
-
-void SIR::set_future(int s)
-{
-	future = s;
-}
-*/
-
 void SIR::refresh()
 {
 	health = 1;
@@ -102,7 +90,6 @@ void SIR::turn_I(Transfer supply) // transfers diseases, using chances p & q.
 	};
 //used in rejection_based algorithm.
 Transfer SIR::update() // updates the future (which is used to calculate the supply) and recovres the node.
-
 {
 
 	auto prev_supply = supply();
@@ -122,7 +109,8 @@ Transfer SIR::update() // updates the future (which is used to calculate the sup
 	return supply();
 }
 
-void SIR::set_seed(Transfer dis)
+void SIR::set_seed(Transfer dis) // has to be modified for the instance
+// that the node has previously infected by the same disease.
 {
 	health *= dis;
 	future *= dis;
