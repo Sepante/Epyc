@@ -1,5 +1,5 @@
 #include "global.h"
-#include "SIR.h"
+#include "Person.h"
 #include "graph_base.h"
 #include "output_utilities.h"
 #include <fstream>
@@ -24,17 +24,15 @@ const bool grid_output_on = true;
 const bool timed_output_on = false;
 
 //Graph_Type graphT = from_file;
-Graph_Type graphT = grid;
-Disease_Type disT = coinfection;
+const Graph_Type graphT = grid;
+const Disease_Type disT = single;
 //Graph_Type graphT = grid;
 //Graph_Type graphT = grid3D;
-
 
 using namespace boost;
 using std::cout;
 using std::endl;
 using std::vector;
-
 
 std::ifstream  fin;
 float r, p = 0.25, q = 1;
@@ -69,10 +67,6 @@ void init_states()
 
 	int seed = rand() % num_vertices(society);
 	actives.insert(seed);
-	//society[seed].health *= seed_dis;
-	//society[seed].future *= seed_dis;
-	//society[seed].set_health( society[seed].get_health() * seed_dis );
-	//society[seed].set_future( society[seed].get_future() * seed_dis );
 	//society[seed].turn_I( seed_dis );
 	society[seed].set_seed(seed_dis);
 
@@ -200,8 +194,7 @@ int main()
 	}
 	srand(time(0));
 	//srand(0);
-		//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
-	//std::vector<int> n_set={16384};
+	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
 	std::vector<int> n_set={1024};
 	std::vector<float> p_set={0.1, 0.15, 0.17, 0.19, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9};
 	//std::vector<float> p_set={0.8, 0.9, 1};
@@ -209,9 +202,10 @@ int main()
 	std::vector<float> r_set={0.1 ,0.5, 0.8, 1};
 	//p_set={1};
 	//p_set={0.25};
-	p_set={0};
+	//p_set={0};
 	//p_set = {0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28 ,0.30, 0.32, 0.34, 0.36, 0.38, 0.4};
-	p_set = {0.2, 0.3, 0.35, 0.4, 0.45, 0.5	};
+	//p_set = {0.2, 0.3, 0.35, 0.4, 0.45, 0.5	};
+	p_set = {0.1};
 	//p_set = {0.3, 0.325, 0.35, 0.375, 0.4, 0.425, 0.45, 0.475, 0.5, 0.525, 0.55, 0.575, 0.6};
 	//p_set = {0.3 ,0.325, 0.35, 0.375};
 	//p_set = {0.15 ,0.175, 0.2, 0.25, 0.275};
@@ -221,7 +215,7 @@ int main()
 	//p_set = {0.005, 0.0075,0.010, 0.0125,0.015, 0.0175,0.020};
 	q_set = {1};
 	r_set={0.0001};
-	r_set={1};
+	r_set={0.1};
 	r = r_set[0];
 	//write system properties to file, for later use in python.
 	fout<<n_set.size()<<"\n";
@@ -260,7 +254,7 @@ int main()
 
 		for (size_t pindex = 0; pindex < p_set.size(); pindex++)
 		{
-				p = p_set[pindex];
+			p = p_set[pindex];
 			for (size_t qindex = 0; qindex < q_set.size(); qindex++)
 			{
 				q = q_set[qindex];
@@ -279,14 +273,18 @@ int main()
 					}
 
 					init_states();
-					for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t += time_step_size)
-					//for (size_t t = 0; t <= 900 && actives.size() >= 1 ; t++)
+
+					//for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t += time_step_size)
+					for (size_t t = starting_time; t <= 100 && actives.size() >= 1 ; t += time_step_size)
 					{
+						//emergence of the second disease
+						//if(t == 20)
+							//society[0].set_seed(dis_two);
 						if(grid_output_on)
 							grid_output(vert_num, tout);
 
 						if(timed_output_on)
-							get_output(graphT, run, last_time_step);
+							terminal_output(graphT, run, last_time_step);
 
 						if (graphT == from_file)
 						{
@@ -332,7 +330,7 @@ int main()
 							system("./erdos_shuffle.sh");
 						}
 
-						get_output(graphT, run, last_time_step);
+						terminal_output(graphT, run, last_time_step);
 					}
 					cluster_size();
 					//fout << ab_cluster << '\n';

@@ -1,6 +1,6 @@
 #include "output_utilities.h"
 
-void get_output(Graph_Type graphT, int run, int last_time_step)
+void terminal_output(Graph_Type graphT, int run, int last_time_step)
 {
 	if(graphT == erdos)
 	{

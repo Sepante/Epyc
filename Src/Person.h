@@ -1,13 +1,24 @@
-#ifndef SIR_H
-#define SIR_H
-#include <iostream>
+#ifndef PERSON_H
+#define PERSON_H
+//#include <iostream>
+#include <vector>
 
+using std::vector;
+
+//int number_of_diseases = 2;
 enum Transfer { neither = 1, dis_one = 2 , dis_two = 3, both = 6 };
-class SIR
+enum disease_state { S = 0, I = 1, R = 2 };
+class Person
 {
 	private:
+	int number_of_diseases = 2;
+
+	std::vector<int> state = vector<int>(number_of_diseases);
+
+
 	int health = 1;
 	int future = 1;
+	//vector<disease_state> state;
 
 	public:
 	void set_health(int s);

@@ -1,24 +1,24 @@
 #include "global.h"
-#include "SIR.h"
+#include "Person.h"
 #include <iostream>
 
-void SIR::refresh()
+void Person::refresh()
 {
 	health = 1;
 	future = 1;
 }
 
-int SIR::get_health()
+int Person::get_health()
 {
 	return health;
 }
 
-int SIR::get_future()
+int Person::get_future()
 {
 	return future;
 }
 
-Transfer SIR::demand() //returns the demand value of the node.
+Transfer Person::demand() //returns the demand value of the node.
 {
 		if(future == 1)
 			return both;
@@ -33,7 +33,7 @@ Transfer SIR::demand() //returns the demand value of the node.
 		else return neither;
 	};
 
-Transfer SIR::supply() //returns the supply value of the node.
+Transfer Person::supply() //returns the supply value of the node.
 {
 		if(health == 6)
 			return both;
@@ -47,7 +47,7 @@ Transfer SIR::supply() //returns the supply value of the node.
 			}
 			else return neither;
 	};
-void SIR::turn_I(Transfer supply) // transfers diseases, using chances p & q.
+void Person::turn_I(Transfer supply) // transfers diseases, using chances p & q.
 {
 		Transfer demand_v = demand();
 		switch (demand_v)
@@ -89,7 +89,7 @@ void SIR::turn_I(Transfer supply) // transfers diseases, using chances p & q.
 		//std::cout << health << '\n';
 	};
 //used in rejection_based algorithm.
-Transfer SIR::update() // updates the future (which is used to calculate the supply) and recovres the node.
+Transfer Person::update() // updates the future (which is used to calculate the supply) and recovres the node.
 {
 
 	auto prev_supply = supply();
@@ -109,7 +109,7 @@ Transfer SIR::update() // updates the future (which is used to calculate the sup
 	return supply();
 }
 
-void SIR::set_seed(Transfer dis) // has to be modified for the instance
+void Person::set_seed(Transfer dis) // has to be modified for the instance
 // that the node has previously infected by the same disease.
 {
 	health *= dis;
@@ -117,7 +117,7 @@ void SIR::set_seed(Transfer dis) // has to be modified for the instance
 }
 
 /*
-void SIR::turn_R(Transfer dis) //used only in the gillespie algorithm form for recoveries.
+void Person::turn_R(Transfer dis) //used only in the gillespie algorithm form for recoveries.
 {
 	health *= dis;
 	future *= dis;
