@@ -1,7 +1,16 @@
 #include "global.h"
 #include "Person.h"
 #include <iostream>
-
+float q=0,p=0,r=0;
+bool dice(float probb) {return true;}
+int Person::population = 0;
+const int Person::disease_num = 1;
+Person::Person()
+{
+	population++;
+	//disease = disease;
+	//std::cout<<"I am created. "<<population<<std::endl;
+}
 void Person::refresh()
 {
 	health = 1;
@@ -116,6 +125,24 @@ void Person::set_seed(Transfer dis) // has to be modified for the instance
 	future *= dis;
 }
 
+void Person::n_update()
+{
+	for (size_t disease_ind = 0; disease_ind <= Person::disease_num -1 ; disease_ind++)
+		disease[disease_ind].update();
+}
+
+void Person::operator ++(int)
+{
+	for (size_t disease_ind = 0; disease_ind <= Person::disease_num -1 ; disease_ind++)
+		disease[disease_ind]++;
+}
+
+void operator +=(Person &a, Person &b)
+{
+	for (size_t disease_ind = 0; disease_ind <= Person::disease_num -1 ; disease_ind++)
+		a.disease[disease_ind] += b.disease[disease_ind];
+}
+
 /*
 void Person::turn_R(Transfer dis) //used only in the gillespie algorithm form for recoveries.
 {
@@ -123,3 +150,32 @@ void Person::turn_R(Transfer dis) //used only in the gillespie algorithm form fo
 	future *= dis;
 }
 */
+int main()
+{
+	Disease dis;
+	Person a,b;
+	a.disease[0].print_state();
+	/*
+	a.disease[0].state = State::IR;
+	a.disease[0].print_state();
+	//a++;
+	a.disease[0].print_state();
+//	a.n_update();
+	a.disease[0].print_state();
+
+	std::cout << "now for 1:" << '\n';
+	b.disease[0].print_state();
+	b+=a;
+	b.disease[0].print_state();
+	b.n_update();
+	b.disease[0].print_state();
+	b++;
+	b.disease[0].print_state();
+	b.n_update();
+	b.disease[0].print_state();
+
+	//a+=b;
+	//x++;
+	//y.turn_I(neither);
+	*/
+}
