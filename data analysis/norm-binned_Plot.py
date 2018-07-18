@@ -5,23 +5,24 @@ from data_reader import *
 #from data_reader import datareader
 #import data_reader
 n = nrange[nindex]
+norm_data = data / n
 #n=243
 opacity_num = 0.5
 for pindex in range(p_size):
     for qindex in range(q_size):
         
-        current_data = data[pindex, qindex, :]
+        #current_data = norm_data[pindex, qindex, :]
         
         #high_a = current_data[:, 1] > -1
         #high_b = current_data[:, 2] > -1
         #joint_condition = np.logical_and(high_a, high_b)
         #joint_cluster = current_data[joint_condition, 0]
         #joint_cluster = np.sum(current_data[joint_condition, :],1)
-        joint_cluster = np.sum( data[pindex, qindex, :] ,1)
+        joint_cluster = np.sum( norm_data[pindex, qindex, :] ,1)
 
 
 
-        hist, bins = np.histogram(joint_cluster, n, range = (0, n))
+        hist, bins = np.histogram(joint_cluster, int(n/5), range = (0, 1))
         widths = np.diff(bins)
         hist = hist / (runNum)
         hist = hist / widths[0]
@@ -54,7 +55,7 @@ for pindex in range(p_size):
 
         name_string = name_string.replace('$','')
         #plt.ylim([0,0.01])
-        plt.xlim([0,n])
+        plt.xlim([0,1])
         
         plt.savefig(location+name_string+".png")
         plt.show()

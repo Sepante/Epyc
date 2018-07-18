@@ -126,3 +126,33 @@ for nindex in range(n_size):
     plt.gca().set_yscale("log")
     plt.show()
     """
+
+#import numpy as np
+#import matplotlib.pyplot as plt
+
+x = joint_cluster
+#x = pd.Series(x)
+
+# histogram on linear scale
+#plt.subplot(211)
+fig , ax = plt.subplots()
+#hist, bins, _ = plt.hist(x, bins=100)
+
+# histogram on log scale. 
+bins = np.arange(1, joint_cluster.max(), joint_cluster.max()/10000000)
+# Use non-equal bin sizes, such that they look equal on log scale.
+logbins = np.logspace( np.log10(bins[0]), np.log10(bins[-1]), len(bins) )
+#plt.subplot(212)
+
+hist, bins = np.histogram(x, logbins)
+"""
+widths = np.diff(bins)
+
+hist = hist / (runNum) #normalizing the bin numbers to one to create the probabiltly.
+hist /= (widths+1) #changing the probabilty distribution to the probability density.
+
+ax.bar(bins[:-1], hist, widths)
+ax.set_xscale('log')
+ax.set_yscale('log')
+#fig.show()
+"""
