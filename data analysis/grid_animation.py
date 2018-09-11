@@ -24,15 +24,16 @@ l = len(vis_data[0])
 total_t = int(len(vis_data) / l)
 
 vis_data = np.array(vis_data).reshape(total_t, l, l)
+vis_data = vis_data[:150]
 bounds = np.array([0, 1, 2, 3, 4, 6, 9, 12, 18, 36]) + 0.1
-cmap = mpl.colors.ListedColormap(['royalblue', 'pink', 'pink' ,'orange', 'red', 'yellow', 'pink', 'pink', 'green'])
+cmap = mpl.colors.ListedColormap(['royalblue', 'cyan', 'pink' ,'green', 'red', 'black', 'green', 'black', 'black'])
 norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 num_string = '{:04d}'.format(10)
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
 #images = []
-location += "../Results/grid_animation/"
+location = "../Results/grid_animation/"
 
 #for t, anim_step in enumerate(vis_data):
 def animate(t):

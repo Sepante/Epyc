@@ -1,9 +1,13 @@
+import importlib as im
 import numpy as np
 import matplotlib.pyplot as plt
 import data_reader as data_1
+im.reload(data_1)
 #import data_reader as data_2
 
-n = 128
+import time
+
+n = data_1.nrange[data_1.nindex]
 ab_cluster_display = True
 R_cluster_display = True
 a_cluster_display = False
@@ -11,7 +15,7 @@ a_cluster_display = False
 opacity_num = 0.5
 binNum = int(n)
 
-hist = np.zeros((data_1.p_size ,binNum),dtype=int)
+hist = np.zeros((data_1.p_size ,binNum), dtype=float)
 
 for qindex in range(data_1.q_size):
     q = data_1.qrange[qindex]
@@ -46,7 +50,9 @@ for qindex in range(data_1.q_size):
         #"""
         if(ab_cluster_display):
             #ab_cluster = current_data[pindex,:,0]
-            ab_cluster = np.sum(current_data[pindex],1)
+            ab_cluster = np.sum(current_data[pindex],1) #for SIR-SIR
+            ab_cluster = current_data[pindex,:,0]+current_data[pindex,:,1] #for SIS-SIR (only considering 
+            #                                                               the first two columns from the output)
             #ab_cluster = data_1.data[pindex, qindex, :, 0]
             #ab_cluster = np.sum(data_1.data[pindex, qindex, :, :],1)
             #ab_cluster = np.exp(data_1.data[pindex, qindex, :, 0])
@@ -75,11 +81,16 @@ for qindex in range(data_1.q_size):
     widths = np.diff(bins)
     hist = hist / (data_1.runNum)
     hist = hist / widths[0]
-    #hist = hist[hist>0.1]
+    
+    #hist [ hist > 0 ] = 1
     #hist %= 0.06 #for now (be careful)
     #hist = hist**(4)
-    #hist[hist > 0.000000001] = 0.000000001
-    hist[hist > 0.005] = 0.005
+    #lower_limit = 0.00015
+    #lower_limit = 0.1
+    #hist[hist < lower_limit] = 1
+    upper_limit =0.00001
+    hist[hist > upper_limit] = upper_limit
+    #hist *=100
     #"""
     im1 = hist.T
 
@@ -91,7 +102,7 @@ for qindex in range(data_1.q_size):
     #"""
     #"""
     plt.subplot(111)
-    plt.imshow(im1, interpolation='none', origin = 'lower', aspect = 1/10, cmap=plt.cm.Blues)
+    plt.imshow(im1, interpolation='none', origin = 'lower', aspect = 6/binNum , cmap=plt.cm.Blues)
     #plt.subplot(212)
     #plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
     
