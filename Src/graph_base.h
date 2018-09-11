@@ -21,6 +21,7 @@ typedef graph_traits<Network>::edge_descriptor Edge;
 typedef graph_traits<Network>::edge_iterator Edge_iter;
 
 extern Network society;
+//Network society(3);
 
 //graph constructor functions
 void cons_Erdos(int n);

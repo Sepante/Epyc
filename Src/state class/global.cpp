@@ -1,5 +1,5 @@
 #include <iostream>
-//#include "global.h"
+
 bool dice(float prob)
 {
 	float r = ((float) rand() / (RAND_MAX));

@@ -1,0 +1,3 @@
+hellomake: global.cpp global.h Person.cpp Person.h main.cpp
+	g++ -std=gnu++11 -o run global.cpp State.cpp Person.cpp main.cpp -I.
+	./run

@@ -1,0 +1,6 @@
+CC=g++ -std=gnu++11
+
+hellomake: global.cpp SIR.cpp main.cpp
+	$(CC) -o run global.cpp SIR.cpp main.cpp -I.
+
+global.o: 

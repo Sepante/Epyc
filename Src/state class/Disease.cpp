@@ -1,21 +1,23 @@
-#include "global.h"
+//#include "global.h"
 #include "Disease.h"
 #include <iostream>
 
-Disease operator +=(Disease &a, Disease &b)
+/*
+void Disease::operator +=(Disease &b)
 {
 	switch (b.state)
 	{
 		case State::IR:
 		case State::IS:
-			if (a.state == State::S)
-				a.future_state = b.state;
+			if (state == State::S)
+				future_state = b.state;
 			break;
 		//default:
 	}
 }
+*/
 
-State Disease::operator ++(int)
+void Disease::operator ++(int)
 {
 	switch (state)
 	{
@@ -39,13 +41,6 @@ void Disease::update()
 	state = future_state;
 }
 
-bool Disease::is_infector ()
-{
-	if(state == State::IR || state == State::IS)
-		return true;
-	else
-		return false;
-}
 
 void Disease::print_state()
 {
@@ -66,4 +61,28 @@ void Disease::print_state()
 			std::cout << "R" << '\n';
 			break;
 	}
+}
+
+int main()
+
+{
+	State_I_R dis, dis2;
+	/*
+	//State_R x;
+
+	//dis.print_state();
+	//dis2.state = State::IR;
+	dis2.state = State::IS;
+
+	dis2.print_state();
+	//dis2 += dis;
+	dis2.update();
+	dis2.print_state();
+
+	//dis.print_state();
+	//dis++;
+	//dis.update();
+	//dis.print_state();
+
+	*/
 }

@@ -2,6 +2,7 @@
 
 void terminal_output(Graph_Type graphT, int run, int last_time_step)
 {
+
 	if(graphT == erdos)
 	{
 		std::cout << "Erdos: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
@@ -20,10 +21,12 @@ void terminal_output(Graph_Type graphT, int run, int last_time_step)
 	}
 	//cluster_size();
 	//cout << (a_cluster + b_cluster + ab_cluster) << '\n';
+	
 }
 
 void grid_output(int n, std::ofstream& tout)
 {
+	/*
 	int l = sqrt(n);
 	for (size_t i = 0; i < l; i++)
 	{
@@ -36,4 +39,5 @@ void grid_output(int n, std::ofstream& tout)
 		}
 		tout << "\n";
 	}
+	*/
 }
