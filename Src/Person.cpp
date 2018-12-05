@@ -2,6 +2,18 @@
 #include "Person.h"
 #include <iostream>
 
+//int Person::ab_cluster_ = 0;
+//int Person::a_cluster_ = 0;
+//int Person::b_cluster_ = 0;
+int Person::supplierNum = 0;
+int Person::demanderNum = 0;
+
+Person::Person()
+{
+	health = 1;
+	future = 1;
+}
+
 void Person::refresh()
 {
 	health = 1;
@@ -89,9 +101,8 @@ void Person::turn_I(Transfer supply) // transfers diseases, using chances p & q.
 		//std::cout << health << '\n';
 	};
 //used in rejection_based algorithm.
-Transfer Person::update() // updates the future (which is used to calculate the supply) and recovres the node.
+Transfer Person::update() // updates the future (which is used to calculate the supply) and recoveres the node.
 {
-
 	auto prev_supply = supply();
 
 	//updating the infection
@@ -106,7 +117,20 @@ Transfer Person::update() // updates the future (which is used to calculate the 
 			health *= 3;
 
 	future = health;
+
+	//std::cout << "qazan" << '\n';
+	//if ( true )
+	if( supply() != neither )
+	{
+		supplierNum ++;
+	}
+	if( demand() == neither )
+	{
+		demanderNum --;
+	}
+
 	return supply();
+
 }
 
 void Person::set_seed(Transfer dis) // has to be modified for the instance
@@ -114,6 +138,11 @@ void Person::set_seed(Transfer dis) // has to be modified for the instance
 {
 	health *= dis;
 	future *= dis;
+
+	//if(dis == both)
+		//ab_cluster_ ++;
+	//else if(dis_one)
+		//a_cluster_ ++;
 }
 
 /*

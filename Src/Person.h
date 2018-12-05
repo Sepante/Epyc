@@ -11,16 +11,21 @@ enum disease_state { S = 0, I = 1, R = 2 };
 class Person
 {
 	private:
-	int number_of_diseases = 2;
+	//int number_of_diseases = 2;
 
-	std::vector<int> state = vector<int>(number_of_diseases);
+	//std::vector<int> state = vector<int>(number_of_diseases);
 
 
-	int health = 1;
-	int future = 1;
+	int health;
+	int future;
 	//vector<disease_state> state;
 
 	public:
+
+	//static int a_cluster_, b_cluster_, ab_cluster_;
+	static int supplierNum;
+	static int demanderNum;
+	Person();
 	void set_health(int s);
 	void set_future(int s);
 
