@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from data_reader import *
 
-n = 243
+n = 16730
 #n = nrange[nindex]
 norm_data = data / n
 
-opacity_num =  200/runNum
-#opacity_num = 0.01
+#opacity_num =  200/runNum
+opacity_num = 0.05
 cmap = mpl.cm.rainbow
 for qindex in range(q_size):
     q=qrange[qindex]
@@ -33,9 +33,9 @@ for qindex in range(q_size):
         plt.xlabel('$p$')   
         plt.ylabel('$R$')
         #plt.xlim([0.03,0.1])
-        plt.ylim([0-0.02,1+0.02])
+        #plt.ylim([0-0.02,1+0.02])
         #plt.xlim([0.01,0.06])
-        #plt.ylim([0.2, 1])
+        #plt.ylim([0.01, 0.1])
         name_string = name_string.replace('$','')
         
         

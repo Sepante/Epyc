@@ -1,13 +1,17 @@
 import networkx as nx
 import numpy as np
+import random
 
 n = 2**8
 #n=10
 cnct_prob = 4/n
 G = nx.erdos_renyi_graph( n, cnct_prob)
-edge_list=[]
-for line in nx.generate_edgelist(G, data=False):
-    edge_list.append(line)
+edge_list=np.zeros((len(G), 2))
+
+#temp = 0
+#for line in nx.generate_edgelist(G, data=False):
+#    temp+=1
+#    edge_list [1:] = line.splie
 #nx.write_edgelist(graph,"input_matrix.txt")
     
 f = open('input_matrix.txt', 'w')

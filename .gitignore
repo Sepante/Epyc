@@ -69,3 +69,5 @@ cdata.txt
 trial.py
 *.mp4
 *.pyc
+*.csv
+*.tex
