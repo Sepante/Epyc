@@ -4,10 +4,10 @@
 
 #include <iostream>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/graph_utility.hpp>
-#include <boost/graph/properties.hpp>
-#include <boost/config.hpp>
-#include <boost/graph/connected_components.hpp>
+//#include <boost/graph/graph_utility.hpp>
+//#include <boost/graph/properties.hpp>
+//#include <boost/config.hpp>
+//#include <boost/graph/connected_components.hpp>
 #include "Person.h"
 #include "global.h"
 
