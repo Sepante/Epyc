@@ -14,7 +14,7 @@ void terminal_output(Graph_Type graphT, int run, int last_time_step)
 	{
 		std::cout << "3D Grid: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
 	}
-	else if(graphT == from_file)
+	else if(graphT == from_file || graphT == static_from_file)
 	{
 		std::cout << "file: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run <<", last_time_step: " << last_time_step << '\n';
 	}
