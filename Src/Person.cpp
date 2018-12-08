@@ -71,7 +71,7 @@ void Person::turn_I(Transfer supply) // transfers diseases, using chances p & q.
 			if (supply == both) // supply and demand are in "both" state.
 			{
 				auto dis_first = dis_one, dis_second = dis_two;
-				if (dice(0.5)) // by 0.5 chance the order of infections will be swaped.
+				if (dice(0.5)) // by 0.5 chance the order of infections will be swapped.
 				{
 					dis_first = dis_two;
 					dis_second = dis_one;
@@ -87,7 +87,7 @@ void Person::turn_I(Transfer supply) // transfers diseases, using chances p & q.
 				else if (dice(p)) //if the first disease is not and the second IS transmitted. (the chance for each disease is p.)
 					future *= dis_second;
 			}
-			else if (dice(p)) //if the demand is both and the supply is not, the reciever will get anything the supply offers, by chance p.
+			else if (dice(p)) //if the demand is both and the supply is not, the reciever will get anything the supply offers, by probability p.
 				future *= supply;
 			//std::cout << "First item selected!" << std::endl;
  			break;
