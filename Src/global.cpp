@@ -1,5 +1,8 @@
 #include <iostream>
 
+  
+
+
 bool dice(float prob)
 {
 	float r = ((float) rand() / (RAND_MAX));

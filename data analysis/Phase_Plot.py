@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from data_reader import *
 
-n = 16730
-#n = nrange[nindex]
+#n = 16730
+n = nrange[nindex]
 norm_data = data / n
 
 #opacity_num =  200/runNum
-opacity_num = 0.05
+opacity_num = 0.2
 cmap = mpl.cm.rainbow
 for qindex in range(q_size):
     q=qrange[qindex]
@@ -19,7 +19,8 @@ for qindex in range(q_size):
         #high_b = current_data[:, 2] > 0.02
         #joint_condition = np.logical_and(high_a, high_b)
         #joint_cluster = current_data[joint_condition,0]
-        joint_cluster = np.sum(current_data[:,:],1)
+        #joint_cluster = np.sum(current_data[:,:],1)
+        joint_cluster = current_data[:, 0]
 
         plt.plot([prange[pindex]], [joint_cluster],'o' , color='purple', alpha=opacity_num )
         """

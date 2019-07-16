@@ -22,11 +22,12 @@ def Burst(i_t_times):
 #pd_data = pd.read_csv('network data/clean/clean email.txt', sep ='\t', header = None)
 #file = "DCW-sh clean sociopattern_conference_contact.txt"
 #filedir = "network data/shuffled/DCW/"
-
-#file = "DCW-sh giant clean primaryschool.txt"
-#filedir = "network data/shuffled/DCW/"
 #filedir = "network data/giant/"
+#file = "giant clean brazil.txt"
+filedir = "network data/shuffled/SO/"
+
 #filedir = "network data/clean/"
+file = "SO-sh clean sociopattern_hospital.txt"
 
 fullfile = filedir + file
 

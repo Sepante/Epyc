@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
-import homoglue
+#import homoglue
 
 for root, dirs, files in os.walk("../Results/glue_stuff/homos", topdown=False):
     True

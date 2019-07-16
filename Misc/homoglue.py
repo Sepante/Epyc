@@ -11,14 +11,14 @@ import result_classifier
 for root, dirs, files in os.walk("../Results/glue_stuff/homos", topdown=False):
     #print(files)
     True
+print(files)
 for file in files:
     os.remove(root+'/'+file)
 
 #intendedR = 0.002
-
 path = "../Results/glue_stuff/raw/"
 aberrations = []
-intendedRunNum = 20000
+intendedRunNum = 10000
 i = 0
 for root, dirs, files in os.walk(path, topdown=True):    
 

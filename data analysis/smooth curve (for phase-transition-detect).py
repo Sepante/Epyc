@@ -3,7 +3,7 @@ import data_reader
 im.reload(data_reader)
 from data_reader import *
 
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 
 
 import numpy as np
@@ -16,6 +16,7 @@ n = nrange[nindex]
 #n = 113
 norm_data = data / n
 opacity_num = 0.5
+binLen = 1
 
 for pindex in range(p_size):
 #for pindex in range(2):
@@ -25,7 +26,7 @@ for pindex in range(p_size):
     # for investigating SIS nodes, because there are many cases which the disease dies out
     #, have a disproportional effect on the ensemble and have to be carved out.
     #current_data = current_data [current_data[ :, 2 ] < 0.1]
-    current_data = current_data [current_data[ :, 0 ] != 0]
+    #current_data = current_data [current_data[ :, 0 ] != 0]
     
     #joint_cluster = current_data[:, 0] + current_data[:, 1] +current_data[:, 2]
     joint_cluster = current_data[:, 0]
@@ -59,11 +60,11 @@ for pindex in range(p_size):
     
     #plt.fill(X_plot[:, 0], expon, fc='#AAAAFF')
              
-    hist, bins = np.histogram(joint_cluster, int( n / 5 ), range = (0, 1))
+    hist, bins = np.histogram(joint_cluster, int( n / binLen ), range = (0, 1))
     
     widths = np.diff(bins)
 
-    #hist = hist / (runNum)
+    hist = hist / (runNum)
     hist = hist / len( joint_cluster )
     hist = hist / widths[0]
     #hist [ hist<0.1 ] = 0
@@ -91,8 +92,8 @@ for pindex in range(p_size):
     print ( (X_plot[local_min:]).argmax() )
     #plt.text(-3.5, 0.31, "Gaussian Kernel Density")
     """
-    plt.ylim([0,3])
-    plt.xlim([0, 1])
+    plt.ylim([0,0.001])
+    plt.xlim([0.0, 1])
     
     #plt.ylim([0,3])
     #plt.xlim([0.4, 0.9])
@@ -106,7 +107,7 @@ for pindex in range(p_size):
 
     name_string = name_string.replace('$','')
     plt.grid()
-    plt.savefig(location + name_string+".png")
+    plt.savefig(location + name_string+".png", bbox_inches='tight')
     plt.show()
     
     

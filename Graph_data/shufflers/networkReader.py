@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import networkx as nx
 
-#input_file_address = "../network data/giant/"
-input_file_address = "../network data/clean/"
+input_file_address = "../network data/giant/"
+#input_file_address = "../network data/clean/"
 #input_file_name = "clean sociopattern_conference_contact.txt"
-input_file_name = "clean sociopattern_hospital.txt"
+#input_file_name = "clean sociopattern_hospital.txt"
 
+input_file_name = "giant clean primaryschool.txt"
 #input_file_name = "giant clean brazil.txt"
 #input_file_name = "giant clean email.txt"
 #input_file_name = "giant clean brazil.txt"

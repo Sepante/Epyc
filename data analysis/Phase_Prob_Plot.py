@@ -7,7 +7,7 @@ from data_reader import *
 n = nrange[nindex]
 #n = 243
 norm_data = data / n
-out_break_cond = 0.2 #obtained by the phase plot
+out_break_cond = 0.005 #obtained by the phase plot
 opacity_num = 3 / np.sqrt(runNum)
 cmap = mpl.cm.rainbow
 for qindex in range(q_size):

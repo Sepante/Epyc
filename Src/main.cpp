@@ -18,39 +18,58 @@
 //#include <boost/config.hpp>
 //#include <boost/graph/connected_components.hpp>
 
-//std::string inputAddress = "../Graph_data/network data/shuffled/DCB/";
+//std::string inputAddress = "../Graph_data/network data/shuffled/DCWB/";
+//std::string inputAddress = "../Graph_data/network data/shuffled/SO/";
 //std::string inputAddress = "../Graph_data/network data/giant/";
-std::string inputAddress = "../Graph_data/network data/agg/";
+std::string inputAddress = "../Graph_data/network data/clean/";
+//std::string inputAddress = "../Graph_data/network data/agg/";
 
-
-
+//std::string inputFileName = "clean sociopattern_conference_contact.txt";
+//std::string inputFileName = "clean sociopattern_hospital.txt";
+//std::string inputFileName = "SO-sh clean sociopattern_hospital.txt";
+//std::string inputFileName = "agg giant clean primaryschool.txt";
+//std::string inputFileName = "agg clean sociopattern_hospital.txt";
+//std::string inputFileName = "clean sociopattern_conference_contact.txt";
+std::string inputFileName = "clean sociopattern_hospital.txt";
 //std::string inputFileName = "giant clean primaryschool.txt";
-std::string inputFileName = "agg giant clean primaryschool.txt";
+//std::string inputFileName = "giant clean brazil.txt";
 
 int seed;
+//distr.param(std::uniform_int_distribution<int>::param_type(5, 13));
 //enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4};
-bool manual_cooperativity_input = false;
-bool cooperate = true;
+const bool manual_cooperativity_input = true;
+bool cooperate = false;
 enum Disease_Type { single = 1, coinfection = 2 } ;
 enum Reshuffle { no_shuffle = 0, erdos_reshuffle = 1, grid_reshuffle = 2 } ;
 //Reshuffle burst_reshuffle = grid_reshuffle;
 const Reshuffle burst_reshuffle = no_shuffle;
 const bool grid_output_on = false;
-const bool timed_output_on = false;
-const bool manual_user_input = false;
+const bool timed_output_on = true;
+const bool manual_user_input = true;
 const bool manual_file_input = false;
 const bool manual_step_size_input = false;
 
-//Graph_Type graphT = from_file;
+const bool seed_farming = false; //to loop over different values of initial diseased node.
+const bool output_seed_num = false;
+
+const bool temporal_periodic_boundary_condition = true;
+int maxPassedLoops = 1000;
+
+SamplingAlgorithm algorithm = SamplingAlgorithm::RejectionSample;
+//SamplingAlgorithm algorithm = SamplingAlgorithm::halfGillespie;
+int last_time;
+long double last_time_mean = 0;
+int last_time_max, last_time_min = 9999;
 //const Graph_Type graphT = from_file;
 const Disease_Type disT = coinfection;
-//Graph_Type graphT = from_file;
-Graph_Type graphT = static_from_file;
-//Graph_Type graphT = grid3D;
 
-int row_count = 0;
+//Graph_Type graphT = static_from_file;
+//Graph_Type graphT = from_file;
+Graph_Type graphT = from_file;
+
+const int row_count = 0;
 int edge_num;
-int column_count = 3;
+const int column_count = 3;
 std::vector<std::vector<int> > temporal_graph(row_count, std::vector<int>(column_count, 0));
 std::ifstream fin;
 bool interactionsRemaining = 1;
@@ -61,14 +80,19 @@ using std::cout;
 using std::endl;
 using std::vector;
 
-//std::ifstream  fin;
+const //std::ifstream  fin;
+int seedsNum = 1;
 float r, p = 0.25, q = 1;
+float rambda;
 float percol_prob = 0;
 std::set <int> actives={};
-int run, runNum = 10000;
+//int run, runNum = 1;
+int run, runNum = 1000;
 
-int time_step_size = 5000; //for the hospital, it has been held = 20 by others.//for brazil, it's 1.//for email: 40 //for FilmMessages: 5000
+int time_step_size = 20; //for the hospital, it has been held = 20 by others.//for brazil, it's 1.//for email: 40 //for FilmMessages: 5000
+//int time_step_size = 1; //for the hospital, it has been held = 20 by others.//for brazil, it's 1.//for email: 40 //for FilmMessages: 5000
 int ab_cluster, a_cluster, b_cluster;
+int AB_cluster, A_cluster, B_cluster;
 int last_time_step = 0;
 bool file_ended = false;
 int read_time = 0, prev_read_time = 0; //used in readfile
@@ -76,8 +100,9 @@ int read_time = 0, prev_read_time = 0; //used in readfile
 Vertex_Num vert_num = 1;
 Network society(0);
 
-void init_states()
+void init_states(int seedsNum)
 {
+	//std::cout << "our seed is : " <<seed << '\n';
 
 	//for( Vertex vd : make_iterator_range( vertices(society) ) )
 	for (size_t vd = 0; vd < vert_num; vd++) //for hpc tailored version
@@ -93,31 +118,90 @@ void init_states()
 	else if(disT == single)
 		seed_dis = dis_one;
 
-	//int seed = rand() % num_vertices(society);
-	seed = rand() % num_vertices(society);
-	actives.insert(seed);
-	//society[seed].turn_I( seed_dis );
-	society[seed].set_seed(seed_dis);
+	if(!seed_farming)
+		seed = rand() % num_vertices(society);
 
-  //society[ 0 ].set_seed(seed_dis);
+	for( size_t i = 0; i < seedsNum; i++ )
+	{
+		seed = rand() % num_vertices(society);
+		//seed = 0;
 
+		actives.insert(seed);
+		society[seed].set_seed(seed_dis);
+	}
+  //society[ 2 ].set_seed(seed_dis);
 }
 
-void cluster_size()
+void cluster_size() //has to be removed in favor of an online counting
 {
 	a_cluster = 0;
 	b_cluster = 0;
 	ab_cluster = 0;
+
+	A_cluster = 0;
+	B_cluster = 0;
+	AB_cluster = 0;
 	//for( Vertex vd : make_iterator_range( vertices(society) ) )
 	for (size_t vd = 0; vd < vert_num; vd++) //for hpc tailored version
 	{
 		if (society[vd].get_health() % 6 == 0)
+		{
 			ab_cluster++;
+			if (society[vd].get_health() == 6)
+				AB_cluster++;
+			else
+			{
+				if (society[vd].get_health() % 4 != 0)
+				{
+					A_cluster++;
+				}
+				if (society[vd].get_health() % 9 != 0)
+				{
+					B_cluster++;
+				}
+			}
+
+		}
+
 		else if (society[vd].get_health() % 2 == 0)
+		{
 			a_cluster++;
+			if (society[vd].get_health() % 4 != 0)
+			{
+				A_cluster++;
+			}
+		}
 		else if (society[vd].get_health() % 3 == 0)
+		{
 			b_cluster++;
+			if (society[vd].get_health() % 9 != 0)
+			{
+				B_cluster++;
+			}
+
+		}
 	}
+}
+
+void simple_output(std::ofstream &fileobj, bool fullresults,bool output_seed_num = false, int tseed = 0)
+{
+	if(output_seed_num)
+	{
+		//std::cout << "yeah" << '\n';
+		fileobj << tseed << ", ";
+	}
+	cluster_size();
+	fileobj << ab_cluster;
+	fileobj <<", " << a_cluster;
+	fileobj <<", " << b_cluster;
+
+	if(fullresults)
+	{
+		fileobj <<", " << AB_cluster;
+		fileobj <<", " << A_cluster;
+		fileobj <<", " << B_cluster;
+	}
+	fileobj << '\n';
 }
 
 int cons_static()
@@ -169,9 +253,6 @@ int cons_static()
 
 int readFile(int t)
 {
-	//std::string inputAddress = "../Graph_data/network data/giant/";
-
-	//std::string inputAddress = "../Graph_data/network data/clean/";
 
   fin.open( inputAddress + inputFileName);
   if (!fin)
@@ -212,6 +293,7 @@ int readFile(int t)
 	fin.close();
 	add_edge( vert_num-1, vert_num-2, society ); // for now! (temp) an ugly way to add all required vertices.
 																							 // since we don't use the edges of the graph, it doesn't affect our problem.
+
 	return vert_num; //for writing attributes to the system.
 }
 
@@ -219,6 +301,7 @@ int FlashForward(int seed) //jumps in time, in order to get to the time, which t
 										//so we don't lose time waiting for it.
 										//((currently only for 1 seed))
 {
+	//std::cout << "seed: " << seed << '\n';
 	//auto edgeNum = temporal_graph. ;
 	for (size_t edget = 0; edget < temporal_graph.size(); edget++)
 	{
@@ -245,8 +328,15 @@ namespace patch
 
 int main()
 {
+	//std::vector<int> x(10);
+	//std::iota(std::begin(x), std::end(x), 0); //0 is the starting number
+	//for( Vertex vd : make_iterator_range( x ) )
+		//std::cout << vd << '\n';
+
+	//std::cout << "number of seeds: " << seedsNum << '\n';
+
 	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
-	std::vector<int> n_set={1024};
+	std::vector<int> n_set={75};
 	std::vector<float> p_set={0.1, 0.15, 0.17, 0.19, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9};
 	//std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
@@ -281,14 +371,25 @@ int main()
 	//p_set = {0.01,0.0125,0.015,0.0175,0.02,0.0225,0.025,0.0275,0.03,0.0325,0.035,0.0375,0.04,0.0425,0.045,0.0475};
 	//p_set = {0.05,0.0525,0.055,0.0575, 0.06,0.0625,0.065,0.0675,0.07 };
 	//p_set = { 0.0875 };
-	p_set = {0.000625, 0.00125 , 0.001875, 0.0025  , 0.003125,
-       0.00375 , 0.004375, 0.005   , 0.005625, 0.00625 , 0.006875,
-       0.0075  , 0.008125, 0.00875 , 0.009375, 0.01};
+	//p_set = {0.000625, 0.00125 , 0.001875, 0.0025  , 0.003125,
+    //   0.00375 , 0.004375, 0.005   , 0.005625, 0.00625 , 0.006875,
+      // 0.0075  , 0.008125, 0.00875 , 0.009375, 0.01};
+	//p_set = {0.145}; //primaryschool
+	//p_set = {0.325}; //brazil
+	//p_set = {0.00001}; agg conference
+	//r_set = {0.001};//hospital
+	//p_set = {0.06}; //hospital
+	//p_set = { , 0.0005, 0.0006, 0.0007, 0.0008, 0.0009, 0.001 };
+	//p_set = {0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09};
+	p_set = {0.01};
 	q_set = {1};
+	r_set = {1};
+	//p_set = {0.00001, 0.000012, 0.000014, 0.000016, 0.000018, 0.000020, 0.000022, 0.000024, 0.000026, 0.000028, 0.000030, 0.000032, 0.000034, 0.000036, 0.000038, 0.000040};
 	//r_set={0.0005};
-	//r_set={0.0002};
-	r_set={0.5};
 	r = r_set[0];
+	rambda =  (r /  time_step_size );
+	rambda = 0.001 / 20.0;
+	//Person::initialize( rambda );
 	if(manual_cooperativity_input)
 	{
 		std::cout << "set the cooperativity boolean value" << '\n';
@@ -334,6 +435,7 @@ int main()
 	int starting_time = 0;
 	clock_t begin = clock();
 	std::ofstream fout;
+	std::ofstream animout;
 	std::ofstream tout;
 	//if we want an animation, one run is enough.
 	if(grid_output_on)
@@ -384,9 +486,14 @@ int main()
 
 	fout << '$' << graphType << '$' << '\n';
 	if(grid_output_on)
-		tout.open("../Results/grid_visualize.csv");
+		animout.open("../Results/grid_visualize.csv");
 
-	//srand(0);
+	if(timed_output_on)
+	{
+		tout.open("../Results/" + std::to_string( randlong ) + " timed-data.txt");
+		tout << "run,t,ab,a,b,AB,A,B" << '\n';
+	}
+		//srand(0);
 
 	//write system properties to file, for later use in python.
 	fout<<n_set.size()<<"\n";
@@ -398,7 +505,11 @@ int main()
 
 	//for(int nindex=0; nindex<n_set.size(); nindex++)
 	int nindex = 0;
+	vert_num = readFile(0);
+	//std::cout << "vert_num: " << vert_num << '\n';
+	//for(seed = 0 ; seed <= vert_num - 1; seed ++)
 	{
+		//std::cout << "who's counting me?" << '\n';
 		vert_num = n_set[nindex];
 		if (graphT == erdos)
 		{
@@ -420,8 +531,13 @@ int main()
 		else if( graphT == static_from_file )
 		{
 			n_set[0] = cons_static();
+			vert_num = n_set[0];
+			Person::demanderNum = vert_num;
+			//std::cout << "dd: " << Person::demanderNum << '\n';
 		}
 
+		//if(seed == 0 )//freaking temporal
+		{
 		for(int nindex=0; nindex<=n_set.size()-1; nindex++)
 		fout<<n_set[nindex]<<"\n";
 		for(int pindex=0; pindex<=p_set.size()-1; pindex++)
@@ -431,8 +547,13 @@ int main()
 		for(int rindex=0; rindex<=r_set.size()-1; rindex++)
 		fout<<r_set[rindex]<<"\n";
 
-		fout<<"ab_cluster, a_cluster, b_cluster"<<'\n';
+		if(output_seed_num)
+		{
+			fout<<"seed, ";
+		}
 
+		fout<<"ab_cluster, a_cluster, b_cluster"<<'\n';
+		}
 		for (size_t pindex = 0; pindex < p_set.size(); pindex++)
 		{
 			p = p_set[pindex];
@@ -450,23 +571,27 @@ int main()
         */
 				for (run = 0; run < runNum; run++)
 				{
-					init_states();
-
-
+					init_states(seedsNum);
 					//for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t += time_step_size)
 
 					if( graphT != from_file )
 					{
-						for (size_t t = starting_time; t <= 10000000 && actives.size() >= 1 ; t += time_step_size)
+						for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t += time_step_size)
 						{
+							//std::cout << "t: " << t << '\n';
 							//emergence of the second disease
 							//if(t == 20)
 								//society[0].set_seed(dis_two);
 							if(grid_output_on)
-								grid_output(vert_num, tout);
+								grid_output(vert_num, animout);
 
 							if(timed_output_on)
-								terminal_output(graphT, run, last_time_step);
+							{
+								tout << run <<", ";
+								tout << t - starting_time <<", ";
+								simple_output(tout, true);
+							}
+								//terminal_output(graphT, run, last_time_step);
 
 							//if (graphT == from_file)
 							//{
@@ -487,14 +612,16 @@ int main()
 									for ( Vertex vi : make_iterator_range( adjacent_vertices(vd, society) ) )
 									{
 										//std::cout << "vi: "<< vi << '\t';
-										society[vi].turn_I( society[vd].supply() );
+										society[vi].turn_I( society[vd].supply(), t );
 									}
 								}
 						  }
 							actives = {};
 							for( Vertex vd : make_iterator_range( vertices(society) ) )
 							{
-								if(society[vd].update() != 1)
+								//society[vd].recover(t);
+								if(society[vd].upgrade(t) != 1)
+								//if(society[vd].update() != 1)
 								{
 									actives.insert(vd);
 								}
@@ -507,57 +634,116 @@ int main()
 					{
 						//std::cout << "seed is: " << seed << '\n';
 						starting_time = FlashForward(seed);
-
+						//starting_time =
+						if( algorithm == SamplingAlgorithm::halfGillespie )
+							society[seed].reEvaluateSeed( starting_time ); // to increase the recover time of the seed, based on the FlashForwarded time.s
+						//std::cout << "starting_time: " << starting_time << '\n';
 						//print_graph(society);
 						int edge = 0;
-						//std::cout << "tt: " << t << '\n';
+						//std::cout << "t: " << t << '\n';
 						//for (size_t t = starting_time; (t <= -1) && interactionsRemaining ; t += time_step_size)
-						for (size_t t = starting_time; t < 100000000000 && interactionsRemaining ; t += time_step_size)
+						if ( algorithm == SamplingAlgorithm::RejectionSample )
+						{
+							for (size_t t = starting_time; t < 100000000000 && interactionsRemaining ; t += time_step_size)
+							{
+
+								if(timed_output_on)
+								{
+									tout << run <<", ";
+									tout << t - starting_time <<", ";
+									simple_output(tout, true);
+								}
+
+
+								last_time = t;
+								int passedLoops = 0;
+								if(!temporal_periodic_boundary_condition)
+									maxPassedLoops = 0;
+								while (  temporal_graph[ edge % edge_num ][0] + passedLoops * temporal_graph[ edge_num - 1 ][0] <= t && passedLoops <= maxPassedLoops)
+								{
+									edge++ ;
+									if( edge > edge_num )
+										passedLoops ++ ;
+									society[ temporal_graph[ edge % edge_num ][1] ].turn_I( society[ temporal_graph[ edge % edge_num ][2] ].supply(), t );
+									society[ temporal_graph[ edge % edge_num ][2] ].turn_I( society[ temporal_graph[ edge % edge_num ][1] ].supply(), t );
+
+								}
+
+								//for( Vertex vd : make_iterator_range( vertices(society) ) )
+
+								for (size_t vd = 0; vd < vert_num; vd++) //for hpc tailored version
+								{
+									//society[vd].recover(t);
+									//society[vd].update();
+									society[vd].upgrade(t);
+									//std::cout << "vd: " << vd << '\n';
+								}
+
+	              if( Person::demanderNum == 0 || Person::supplierNum == 0 )      //SIR only
+	                interactionsRemaining = 0;                                    //SIR only
+
+	              Person::supplierNum = 0;                                     //SIR only
+	              Person::demanderNum = vert_num;                                     //SIR only
+								//if(!((t - starting_time) % 1))
+								//{
+									//std::cout << "t: " << t - starting_time << '\n';
+									//std::cout<<"edge time: "<<temporal_graph[ edge % edge_num ][0] <<'\n';
+								//}
+							}
+						}
+						else if( algorithm == SamplingAlgorithm::halfGillespie )
 						{
 
-							//std::cout << "t: " << t << '\n';
-							//for (edge; temporal_graph[edge][0] <= t < edge_num; edge++)
-							int passedLoops = 0;
-							while (  temporal_graph[ edge % edge_num ][0] + passedLoops * temporal_graph[ edge_num - 1 ][0] <= t )
+
+							int t = 0;
+							int lastEdget = 0;
+							for (size_t edge = 0; edge < 100000000000 && interactionsRemaining ; edge++)
 							{
-								//std::cout << temporal_graph[ edge % edge_num ][0] << ", " << temporal_graph[ edge % edge_num ][1] << ", " << temporal_graph[ edge % edge_num ][2] <<'\n';
-								//std::cout << "t: " << t << '\n';
-								//std::cout << "edge: " << edge << '\n';
-								edge++ ;
-								if( edge > edge_num )
-									passedLoops ++ ;
-								society[ temporal_graph[ edge % edge_num ][1] ].turn_I( society[ temporal_graph[ edge % edge_num ][2] ].supply() );
-								society[ temporal_graph[ edge % edge_num ][2] ].turn_I( society[ temporal_graph[ edge % edge_num ][1] ].supply() );
+								std::cout << "edge" << '\n';
+								t = temporal_graph[ edge % edge_num ][0];
+								society[ temporal_graph[ edge % edge_num ][1] ].turn_I( society[ temporal_graph[ edge % edge_num ][2] ].supply(), t );
+								society[ temporal_graph[ edge % edge_num ][2] ].turn_I( society[ temporal_graph[ edge % edge_num ][1] ].supply(), t );
+
+								//for( Vertex vd : make_iterator_range( vertices(society) ) )
+								if ( t != lastEdget )
+									for (size_t vd = 0; vd < vert_num; vd++) //for hpc tailored version
+									{
+										//society[vd].recover(t);
+										//society[vd].update();
+										society[vd].upgrade(t);
+										//std::cout << "vd: " << vd << '\n';
+									}
+
+								if( Person::demanderNum == 0 || Person::supplierNum == 0 )      //SIR only
+									interactionsRemaining = 0;                                    //SIR only
+
+								Person::supplierNum = 0;                                     //SIR only
+								Person::demanderNum = vert_num;                                     //SIR only
+								//if(!((t - starting_time) % 1))
+								//{
+									//std::cout << "t: " << t - starting_time << '\n';
+									//std::cout<<"edge time: "<<temporal_graph[ edge % edge_num ][0] <<'\n';
+								//}
+
+								lastEdget = t;
+								if(timed_output_on)
+								{
+									tout << run <<", ";
+									tout << t - starting_time <<", ";
+									simple_output(tout, true);
+								}
 
 							}
-							//std::cout << "t: " << t << '\n';
-							//for( Vertex vd : make_iterator_range( vertices(society) ) )
-							for (size_t vd = 0; vd < vert_num; vd++) //for hpc tailored version
-							{
-								society[vd].update();
-								//std::cout << "vd: " << vd << '\n';
-							}
-
-              //std::cout << "supplierNum: " << Person::supplierNum << '\n'; //SIR only
-              //std::cout << "demanderNum: " << Person::demanderNum << '\n'; //SIR only
-							//std::cout << "seed: " << society[seed].demand() << '\n';
-              if( Person::demanderNum == 0 || Person::supplierNum == 0 )      //SIR only
-                interactionsRemaining = 0;                                    //SIR only
-
-              Person::supplierNum = 0;                                     //SIR only
-              Person::demanderNum = vert_num;                                     //SIR only
-							//if(!((t - starting_time) % 1))
-							//{
-								//std::cout << "t: " << t - starting_time << '\n';
-								//std::cout<<"edge time: "<<temporal_graph[ edge % edge_num ][0] <<'\n';
-							//}
 						}
+						//std::cout << "last time: " << last_time << '\n';
             interactionsRemaining = 1;                                      //SIR only
 					}
-
+					//last_time_mean += (double)last_time / runNum;
+					//last_time_max = fmax( last_time_max, last_time );
+					//last_time_min = fmin( last_time_min, last_time );
 					if(grid_output_on)
-						grid_output(vert_num, tout);
-					if(run % 1000 == 0)
+						grid_output(vert_num, animout);
+					if(run % 100 == 0)
 					{
 						//temporal!!!!
 						if (burst_reshuffle == grid_reshuffle)
@@ -571,19 +757,35 @@ int main()
 
 						terminal_output(graphT, run, last_time_step);
 					}
-					cluster_size();
+
+					//cluster_size();
 					//fout << ab_cluster << '\n';
-					fout << ab_cluster;
-					fout <<", " << a_cluster;
-					fout <<", " << b_cluster << '\n';
+					//fout << ab_cluster;
+					//fout <<", " << a_cluster;
+					//fout <<", " << b_cluster << '\n';
+
+					simple_output(fout, false, output_seed_num, seed);
+					if( graphT == from_file )
+						if(Person::demanderNum != 0 && Person::supplierNum != 0)
+						{
+							std::cout << "demanderNum: " << Person::demanderNum << '\n';
+							std::cout << "supplierNum: " << Person::supplierNum << '\n';
+							std::cout << "the simulation could go on!" << '\n';
+						}
 				}
 			}
 		}
 	}
 
+	//std::cout << "last time mean: " << last_time_mean << '\n';
+	//std::cout << "last time max: " << last_time_max << '\n';
+	//std::cout << "last time min: " << last_time_min << '\n';
+	fout.close();
+	animout.close();
+
 	clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "elapsed time: " << elapsed_secs << '\n';
 	std::cout << "random code: " << randlong << '\n';
-	std::cout << time_step_size << '\n';
+	std::cout << "time_step_size: " << time_step_size << '\n';
 }

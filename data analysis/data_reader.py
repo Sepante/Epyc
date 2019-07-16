@@ -17,14 +17,34 @@ import pandas as pd
 #with open('../Results/glue_stuff/heteros/giant clean brazil 0.0125.txt') as f:
 #with open('../Results/glue_stuff/heteros/D-sh giant clean brazil non-coop 0.3000.txt') as f:
 
-with open('../Results/glue_stuff/heteros/D-sh giant clean email 0.0025.txt') as f:
+#with open('../Results/glue_stuff/heteros/D-sh giant clean email 0.0025.txt') as f:
 #with open('../Results/glue_stuff/heteros/conference/DCW-sh clean sociopattern_conference_contact non-coop 0.0100.txt') as f:
-    
+#with open( '../Results/giant clean primaryschool.txt 0.145 1407863207-data.txt' ) as f:
+#with open( '../Results/glue_stuff/heteros/clean sociopattern_hospital 0.0100.txt' ) as f:
+
 #with open('../Results/glue_stuff/heteros/DCWB-sh giant clean primaryschool 0.0200.txt') as f:    
     
 #with open('../Results/glue_stuff/heteros/primary school/giant clean primaryschool non-coop 0.0200.txt') as f:
-    
+nindex = rindex = pindex = qindex = 0
+file_dir = "../Results/"
+#file_dir = "../Results/xprotected timed data/primaryschool/"
+#file_dir = "../Results/xprotected timed data/conference/"
+file_dir = "../Results/xprotected timed data/hospital/"
+#file_dir = "../Results/glue_stuff/heteros/hospital/"
 
+#file_name = "agg clean sociopattern_conference_contact.txt  non-coop 01e-05 205545703-data.txt"
+#file_name = "agg clean sociopattern_conference_contact.txt 1.00e-05 401874239-data.txt"
+#file_name = "agg clean sociopattern_conference_contact.txt  non-coop 01e-05 205545703-data.txt"
+#file_name = "Erdos 1.25e-05 413026351-data.txt"
+#file_name = "hospital/D-sh clean sociopattern_hospital 0.0100.txt"
+#file_name = "SO-sh clean sociopattern_hospital.txt 0.01 1556295241-data.txt"
+#file_name = "DCWB-sh clean sociopattern_hospital 0.0100.txt"
+file_name = "DCWB-sh clean sociopattern_hospital.txt  non-coop 0.06 1624215451-data.txt"
+#file_name = "clean sociopattern_conference_contact.txt 0.06 1395082371-data.txt"
+second_dir = ""
+second_file_name = ""
+
+with open(file_dir + file_name, 'r') as f:
 
 #with open('../Results/bursty grid 0.15.txt 1380287758-data.txt') as f:
 
@@ -47,9 +67,11 @@ with open('../Results/glue_stuff/heteros/D-sh giant clean email 0.0025.txt') as 
     
     
     pd_data = pd.read_csv(f)
+
+data_type = data_type.replace('_', '')
 if ( 'non-coop' in str(f) ):
     qrange = prange
 data = np.array(pd_data)
 data = np.array(data).reshape(p_size, q_size, runNum,3)
-nindex = rindex = pindex = qindex = 0
-location = "../Results/sunday/email-seminar/"
+
+location = "../Results/"

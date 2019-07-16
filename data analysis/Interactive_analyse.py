@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import data_reader as data_1
 im.reload(data_1)
+import scipy.stats as stats
 #import data_reader as data_2
 
 n = data_1.nrange[data_1.nindex]
@@ -12,7 +13,7 @@ R_cluster_display = True
 a_cluster_display = False
 
 opacity_num = 0.5
-binNum = int(n/30)
+binNum = int(n/1)
 
 hist = np.zeros((data_1.p_size ,binNum), dtype=float)
 
@@ -61,6 +62,9 @@ for qindex in range(data_1.q_size):
             #print(ab_cluster.max())
             #print(len(ab_cluster))
             
+            #ab_cluster = ab_cluster[::2]
+            #ab_cluster = ab_cluster[y_pred == 0]
+            
             hist[pindex], bins = np.histogram(ab_cluster, binNum, range = (0, n))
             #plt.bar(bins[:-1], hist[pindex], widths,  color = 'b', linewidth=0, alpha = opacity_num)            
             #print(hist[pindex].sum())
@@ -91,15 +95,15 @@ for qindex in range(data_1.q_size):
     #hist %= 0.06 #for now (be careful)
     #hist = hist**(4)
     #lower_limit = 0.00015
-    #lower_limit = 0.1
-    #hist[hist < lower_limit] = 1
-    #upper_limit = 0.0005
+    #lower_limit = 0.02
+    #hist[hist < lower_limit] = lower_limit
+    #upper_limit = 0.052
     #hist[hist > upper_limit] = upper_limit
     #hist *=100
     #"""
     #hist = hist[:, 2:100]
     im1 = hist.T
-    omitted_bins = 5
+    omitted_bins = 4
     im1 = im1[omitted_bins:]
     #ax1.imshow(im1, interpolation='none', aspect = 8, cmap=plt.cm.BuPu_r)
     #fig1.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
@@ -109,13 +113,14 @@ for qindex in range(data_1.q_size):
     #"""
     #"""
     plt.subplot(111)
-    plt.imshow(im1, interpolation='none', origin = 'lower', aspect = 34/binNum , cmap=plt.cm.gnuplot)
+    plt.imshow(im1, interpolation='none', origin = 'lower', aspect = 50/binNum , cmap=plt.cm.gnuplot)
+    #plt.imshow(im1, interpolation='none', origin = 'lower', aspect = 20/binNum , cmap=plt.cm.gnuplot)
     #im1 = im1[1:]
     #plt.imshow(im1, interpolation='none', origin = 'lower', aspect = 10/binNum , cmap=plt.cm.gnuplot)
     #plt.subplot(212)
     #plt.imshow(np.random.random((100, 100)), cmap=plt.cm.BuPu_r)
     
-    pIllusStep = 2
+    pIllusStep = 1
     lam_beta = np.array(data_1.prange)[::pIllusStep]
     ticks = np.arange(len(data_1.prange))[::pIllusStep]
     
@@ -155,7 +160,10 @@ for qindex in range(data_1.q_size):
     #plt.savefig('/media/sepante/04762A4D762A4032/University/Network Project/Simulation/C++/Temporal SIR/Results/coin-R.png', dpi = 1000) # change the resolution of the saved image
     location = data_1.location
 
-    plt.savefig(location+" histogram, "+ "ab, " +name_string+".png", bbox_inches='tight')
+    #plt.savefig(location+"histogram, "+ "ab, " +name_string+".png", bbox_inches='tight')
     plt.show()
 
     #"""
+##Kullback–Leibler divergence
+#for i in range(1,len(hist)):
+    #print( stats.entropy(hist[0]+0.00001, hist[i]+0.001) )

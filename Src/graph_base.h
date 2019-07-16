@@ -13,6 +13,8 @@
 
 using namespace boost;
 typedef adjacency_list<listS, vecS, undirectedS, Person> Network;
+//typedef adjacency_list<listS, vecS, undirectedS, Person(SamplingAlgorithm algorithm)> Network2(SamplingAlgorithm algorithm);
+//typedef adjacency_list<listS, vecS, undirectedS, Person(int a)> Network2(int a);
 typedef graph_traits<Network>::edges_size_type Edge_Num;
 typedef graph_traits<Network>::vertices_size_type Vertex_Num;
 typedef graph_traits<Network>::vertex_iterator Vertex_iter;
@@ -21,6 +23,8 @@ typedef graph_traits<Network>::edge_descriptor Edge;
 typedef graph_traits<Network>::edge_iterator Edge_iter;
 
 extern Network society;
+//extern Network2 society;
+//int qqq;
 
 //graph constructor functions
 void cons_Erdos(int n);
