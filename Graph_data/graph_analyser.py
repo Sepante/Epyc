@@ -1,8 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
+
+import matplotlib
 import pandas as pd
 import scipy as sp
 from scipy import optimize
+import matplotlib.ticker as mtick
+from matplotlib.ticker import FormatStrFormatter
+
 #"""
 def Burst(i_t_times):
     return ( np.std(i_t_times) - np.mean(i_t_times) ) / (np.std(i_t_times) + np.mean(i_t_times) )
@@ -24,10 +30,12 @@ def Burst(i_t_times):
 #filedir = "network data/shuffled/DCW/"
 #filedir = "network data/giant/"
 #file = "giant clean brazil.txt"
-filedir = "network data/shuffled/SO/"
+#filedir = "network data/shuffled/SOU/"
 
-#filedir = "network data/clean/"
-file = "SO-sh clean sociopattern_hospital.txt"
+filedir = "network data/clean/"
+#file = "clean sociopattern_hospital.txt"
+#file = "giant clean primaryschool.txt"
+file = "clean sociopattern_conference_contact.txt"
 
 fullfile = filedir + file
 
@@ -39,22 +47,62 @@ pd_data = pd.read_csv(fullfile , sep ='\t', header = None)
 temp_graph = np.array(pd_data)
 
 
-plt.suptitle( file + "# $of$ $contacts$")
+#plt.suptitle( file + "# $of$ $contacts$")
 
 #temp_graph[:, 0]= np.round( temp_graph[:, 0] / 1000 )
 
-binNum = 100
+binNum = int (temp_graph[:,0].max() / 3600 )
 hist, bins = np.histogram(temp_graph[:, 0], binNum)
 widths = np.diff(bins)
 #hist = hist / len( temp_graph[:, 0] )
 #hist = hist / widths[0]
 
+#pIllusStep = 1
+#lam_beta = np.array(data_1.prange)[::pIllusStep]
+#ticks = np.arange(len(data_1.prange))[::pIllusStep]
+#strticks = tuple ( [ str( '{:.1e}'.format(i) ) for i in lam_beta ] )
+
+#strticks = [ remove_zero(a) for a in strticks ]
+
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
 
 
-plt.bar(bins[:-1], hist, widths,  color = 'orange', linewidth=1)
-plt.savefig("contact_num, "+file+ "ab, " +".png")
+ax.bar(bins[:-1], hist, widths,  color = 'orange', linewidth=1,   ec='black')
+#plt.plot(bins[:-1], hist, '--o')
+#ax.yaxis.set_label_coords(-0.08, 0.5)
+ax.set_xlabel( '$t(s)$' )
+ax.set_ylabel( '$C$' )
+
+
+
+ax.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+#ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
+
+ax.yaxis.major.formatter._useMathText = True
+
+
+ax.ticklabel_format(axis='x', style='sci', scilimits=(0,0))
+
+ax.xaxis.major.formatter._useMathText = True
+
+ratio =  (hist.max() / bins.max())
+
+ax.set_aspect(0.5/ratio)
+
+matplotlib.rcParams.update({'font.size': 16})
+
+file = file.replace('_', '')
+file = file.replace('.txt', '')
+file = file.replace(' ', '')
+#data_type = data_type.replace('giant ', '')
+
+
+fig.savefig("contactnum-"+file+ "-ab" +".png" ,dpi = 300, bbox_inches='tight')
+#fig.savefig("contactnum-"+file+ "-ab" +".png", bbox_inches='tight')
 plt.show()
 #plt.plot( bins[:-1], hist, widths, 'o' )
+"""
 mean = np.full( binNum , hist.mean())
 #print(mean[0] )
 #plt.plot(bins[:-1], mean , 'r--')
@@ -83,7 +131,7 @@ for edge in edge_list:
 
 
 unique_rows = np.unique(edge_list, axis=0)
-
+"""
 """
 ind_burst = []
 occurence_num = []
@@ -111,6 +159,7 @@ for edge_samp in unique_rows:
     
     #print(times.mean())
 #"""
+"""
 opacity_num = 1
 #plt.hist( occurence_num ,100)
 hist, bins = np.histogram(occurence_num, 100 )
@@ -131,6 +180,7 @@ plt.xlabel('$edge-burst$ $histogram$')
 plt.savefig( "edge-burst-hist " + file + ".png" )
 plt.show()
 #"""
+"""
 #plt.xlim([150, 300])
 plt.xlabel('$edge$ $occurence$ $number$')
 plt.ylabel('$burst$')

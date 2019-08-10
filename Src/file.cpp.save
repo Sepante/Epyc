@@ -1,0 +1,47 @@
+xx#include <iostream>
+#include <random>
+#include <ctime>
+main()
+{
+
+  std::random_device randomSeed;
+  std::default_random_engine gen( randomSeed( ) );
+  //std::normal_distribution<double> gaussian(1.4,1.2);
+  //std::exponential_distribution<double> expon( 1/19173.6 );
+  //float rambda = (float)1/3000;
+  /*
+  float rambda = 1/3000;
+  std::cout << "rambda: " << rambda << '\n';
+  std::exponential_distribution<double> expon( rambda );
+  //expon.param(2.0);
+  long int count = 100000000;
+  long double sum = 0;
+  clock_t begin = clock();
+  for (size_t i = 0; i < count; i++)
+  {
+    //std::cout << exp(gen) << '\n';
+    sum += expon(gen)/count  ;
+    if ( i % 10000000 == 0 )
+      std::cout << "bing! " << i << '\n';
+    //std::cout << randomSeed() << '\n';
+  }
+  //auto mean = (float)sum / count;
+  double mean = (double)sum;
+  std::cout << 1/(5.00250167e-05)  << '\n';
+  std::cout << "sum: " << sum << '\n';
+  std::cout << "mean: " << mean << '\n';
+  clock_t end = clock();
+  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+  std::cout << "elapsed time: " << elapsed_secs << '\n';
+
+  */
+  int time_step_size = 20;
+  float r = 0.001;
+  float rambda =  ((float)r /  time_step_size );
+	std::cout << "float -r: " << (float)r << '\n';
+	std::cout << "float -time_step_size: " << (float)time_step_size << '\n';
+	std::cout << "rambda: " << rambda << '\n';
+  std::exponential_distribution<double> expon( rambda );
+
+
+}

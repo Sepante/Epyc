@@ -18,27 +18,32 @@
 //#include <boost/config.hpp>
 //#include <boost/graph/connected_components.hpp>
 
+//std::string inputAddress = "../Graph_data/network data/shuffled/DCW/";
 //std::string inputAddress = "../Graph_data/network data/shuffled/DCWB/";
 //std::string inputAddress = "../Graph_data/network data/shuffled/SO/";
+std::string inputAddress = "../Graph_data/network data/shuffled/SOU/";
 //std::string inputAddress = "../Graph_data/network data/giant/";
-std::string inputAddress = "../Graph_data/network data/clean/";
+//std::string inputAddress = "../Graph_data/network data/clean/";
 //std::string inputAddress = "../Graph_data/network data/agg/";
 
 //std::string inputFileName = "clean sociopattern_conference_contact.txt";
 //std::string inputFileName = "clean sociopattern_hospital.txt";
-//std::string inputFileName = "SO-sh clean sociopattern_hospital.txt";
+//std::string inputFileName = "SO-sh giant clean primaryschool.txt";
+std::string inputFileName = "SOU-sh giant clean primaryschool.txt";
+//std::string inputFileName = "DCWB-sh giant clean primaryschool.txt";
+//std::string inputFileName = "DCW-sh giant clean primaryschool.txt";
 //std::string inputFileName = "agg giant clean primaryschool.txt";
 //std::string inputFileName = "agg clean sociopattern_hospital.txt";
 //std::string inputFileName = "clean sociopattern_conference_contact.txt";
-std::string inputFileName = "clean sociopattern_hospital.txt";
+//std::string inputFileName = "clean sociopattern_hospital.txt";
 //std::string inputFileName = "giant clean primaryschool.txt";
 //std::string inputFileName = "giant clean brazil.txt";
 
 int seed;
 //distr.param(std::uniform_int_distribution<int>::param_type(5, 13));
 //enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4};
-const bool manual_cooperativity_input = true;
-bool cooperate = false;
+const bool manual_cooperativity_input = false;
+bool cooperate = true;
 enum Disease_Type { single = 1, coinfection = 2 } ;
 enum Reshuffle { no_shuffle = 0, erdos_reshuffle = 1, grid_reshuffle = 2 } ;
 //Reshuffle burst_reshuffle = grid_reshuffle;
@@ -87,7 +92,7 @@ float rambda;
 float percol_prob = 0;
 std::set <int> actives={};
 //int run, runNum = 1;
-int run, runNum = 1000;
+int run, runNum = 10;
 
 int time_step_size = 20; //for the hospital, it has been held = 20 by others.//for brazil, it's 1.//for email: 40 //for FilmMessages: 5000
 //int time_step_size = 1; //for the hospital, it has been held = 20 by others.//for brazil, it's 1.//for email: 40 //for FilmMessages: 5000
@@ -374,14 +379,14 @@ int main()
 	//p_set = {0.000625, 0.00125 , 0.001875, 0.0025  , 0.003125,
     //   0.00375 , 0.004375, 0.005   , 0.005625, 0.00625 , 0.006875,
       // 0.0075  , 0.008125, 0.00875 , 0.009375, 0.01};
-	//p_set = {0.145}; //primaryschool
+	p_set = {0.145}; //primaryschool
 	//p_set = {0.325}; //brazil
 	//p_set = {0.00001}; agg conference
 	//r_set = {0.001};//hospital
 	//p_set = {0.06}; //hospital
 	//p_set = { , 0.0005, 0.0006, 0.0007, 0.0008, 0.0009, 0.001 };
 	//p_set = {0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09};
-	p_set = {0.01};
+	//p_set = {0.01};
 	q_set = {1};
 	r_set = {1};
 	//p_set = {0.00001, 0.000012, 0.000014, 0.000016, 0.000018, 0.000020, 0.000022, 0.000024, 0.000026, 0.000028, 0.000030, 0.000032, 0.000034, 0.000036, 0.000038, 0.000040};
@@ -636,7 +641,9 @@ int main()
 						starting_time = FlashForward(seed);
 						//starting_time =
 						if( algorithm == SamplingAlgorithm::halfGillespie )
+						{
 							society[seed].reEvaluateSeed( starting_time ); // to increase the recover time of the seed, based on the FlashForwarded time.s
+						}
 						//std::cout << "starting_time: " << starting_time << '\n';
 						//print_graph(society);
 						int edge = 0;
@@ -658,7 +665,11 @@ int main()
 								last_time = t;
 								int passedLoops = 0;
 								if(!temporal_periodic_boundary_condition)
+								{
 									maxPassedLoops = 0;
+									std::cout << "non-periodic!" << '\n' << '\n';
+
+								}
 								while (  temporal_graph[ edge % edge_num ][0] + passedLoops * temporal_graph[ edge_num - 1 ][0] <= t && passedLoops <= maxPassedLoops)
 								{
 									edge++ ;
@@ -680,7 +691,10 @@ int main()
 								}
 
 	              if( Person::demanderNum == 0 || Person::supplierNum == 0 )      //SIR only
-	                interactionsRemaining = 0;                                    //SIR only
+								{
+									interactionsRemaining = 0;                                    //SIR only
+									//std::cout << "interactionsRemaining = 0 " << '\n';
+								}
 
 	              Person::supplierNum = 0;                                     //SIR only
 	              Person::demanderNum = vert_num;                                     //SIR only
@@ -701,6 +715,7 @@ int main()
 							{
 								std::cout << "edge" << '\n';
 								t = temporal_graph[ edge % edge_num ][0];
+								std::cout << "t: " << t << '\n';
 								society[ temporal_graph[ edge % edge_num ][1] ].turn_I( society[ temporal_graph[ edge % edge_num ][2] ].supply(), t );
 								society[ temporal_graph[ edge % edge_num ][2] ].turn_I( society[ temporal_graph[ edge % edge_num ][1] ].supply(), t );
 
@@ -713,12 +728,16 @@ int main()
 										society[vd].upgrade(t);
 										//std::cout << "vd: " << vd << '\n';
 									}
-
-								if( Person::demanderNum == 0 || Person::supplierNum == 0 )      //SIR only
-									interactionsRemaining = 0;                                    //SIR only
+									/*
+									if( Person::demanderNum == 0 || Person::supplierNum == 0 )      //SIR only
+									{
+										interactionsRemaining = 0;                                    //SIR only
+										std::cout << "demand: " << Person::supplierNum << '\n';
+									}
 
 								Person::supplierNum = 0;                                     //SIR only
 								Person::demanderNum = vert_num;                                     //SIR only
+								*/
 								//if(!((t - starting_time) % 1))
 								//{
 									//std::cout << "t: " << t - starting_time << '\n';

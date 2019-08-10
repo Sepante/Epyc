@@ -18,7 +18,7 @@ for file in files:
 #intendedR = 0.002
 path = "../Results/glue_stuff/raw/"
 aberrations = []
-intendedRunNum = 10000
+intendedRunNum = 50000
 i = 0
 for root, dirs, files in os.walk(path, topdown=True):    
 
@@ -68,7 +68,7 @@ for root, dirs, files in os.walk(path, topdown=True):
             file_name , _ , _ = files[0].split('.txt')
             if( 'non-coop' in files[0] ):
                 file_name = file_name + ' non-coop'
-            output_file_name =  "../Results/glue_stuff/homos/" + file_name + " " + "{0:.4f}".format(prange[0]) + ".txt"
+            output_file_name =  "../Results/glue_stuff/homos/" + file_name + " " + "{0:.6f}".format(prange[0]) + ".txt"
             for file in files[1:]:
                 with open(root + '/' + file) as f:
                     #print(root + '/' + file)

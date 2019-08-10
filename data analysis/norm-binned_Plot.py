@@ -34,7 +34,7 @@ for pindex in [-1]:
         hist = hist / (runNum)
         hist = hist / widths[0]
         plt.bar(bins[:-1], hist, widths,  color = 'g', alpha = 1, ec='black')
-        plt.show()
+        #plt.show()
         
         
         
@@ -68,7 +68,7 @@ for pindex in [-1]:
         plt.xlim([0,n])
         
         #plt.savefig(location+name_string+".png" , bbox_inches='tight')
-        #plt.show()
+        plt.show()
 
 pd_data = pd.DataFrame()
 pd_data[data_type] = hist

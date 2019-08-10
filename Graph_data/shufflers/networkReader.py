@@ -6,11 +6,12 @@ import networkx as nx
 
 input_file_address = "../network data/giant/"
 #input_file_address = "../network data/clean/"
+#input_file_address = "../network data/shuffled/SOU/"
 #input_file_name = "clean sociopattern_conference_contact.txt"
-#input_file_name = "clean sociopattern_hospital.txt"
+#input_file_name = "SO-sh clean sociopattern_hospital.txt"
 
+#input_file_name = "SOU-sh giant clean primaryschool.txt"
 input_file_name = "giant clean primaryschool.txt"
-#input_file_name = "giant clean brazil.txt"
 #input_file_name = "giant clean email.txt"
 #input_file_name = "giant clean brazil.txt"
 #input_file_name = "giant clean FilmMessages.txt"
@@ -25,3 +26,12 @@ vertices_num = np.max( data[:, 1:] ) + 1
 
 print(input_file_name)
 #print("hi")
+"""
+for t in set(data[:, 0]):
+    nodes = list( data[ data[:, 0] == t, 1] )
+    nodes.extend( list( data[ data[:, 0] == t, 2] ) )
+    #node
+    #times = ( data[ data[:, 0] == t, 0] )
+    print(t, ": ")
+    print(len( nodes) - len(set(nodes)) )
+"""

@@ -26,11 +26,18 @@ import pandas as pd
     
 #with open('../Results/glue_stuff/heteros/primary school/giant clean primaryschool non-coop 0.0200.txt') as f:
 nindex = rindex = pindex = qindex = 0
-file_dir = "../Results/"
-#file_dir = "../Results/xprotected timed data/primaryschool/"
-#file_dir = "../Results/xprotected timed data/conference/"
-file_dir = "../Results/xprotected timed data/hospital/"
-#file_dir = "../Results/glue_stuff/heteros/hospital/"
+#file_dir = "../Results/"
+#file_dir = "../Results/glue_stuff/heteros/primaryschool-adjusted/non-coop/"
+file_dir = "../Results/glue_stuff/heteros/primaryschool-adjusted/coop/"
+
+#file_dir = "../Results/glue_stuff/heteros/hospital/coop/"
+
+#file_dir = "../Results/glue_stuff/heteros/conference/non-coop/"
+#file_dir = "../Results/glue_stuff/heteros/"
+#file_dir = "../Results/glue_stuff/heteros/primaryschool-adjusted/"
+#file_dir = "../Results/"
+
+
 
 #file_name = "agg clean sociopattern_conference_contact.txt  non-coop 01e-05 205545703-data.txt"
 #file_name = "agg clean sociopattern_conference_contact.txt 1.00e-05 401874239-data.txt"
@@ -38,9 +45,23 @@ file_dir = "../Results/xprotected timed data/hospital/"
 #file_name = "Erdos 1.25e-05 413026351-data.txt"
 #file_name = "hospital/D-sh clean sociopattern_hospital 0.0100.txt"
 #file_name = "SO-sh clean sociopattern_hospital.txt 0.01 1556295241-data.txt"
-#file_name = "DCWB-sh clean sociopattern_hospital 0.0100.txt"
-file_name = "DCWB-sh clean sociopattern_hospital.txt  non-coop 0.06 1624215451-data.txt"
+
+#file_name = "DCW-sh giant clean primaryschool 0.000250.txt"
+#file_name = "giant clean primaryschool 0.000250.txt"
+#file_name = "SOU-sh giant clean primaryschool 0.000250.txt"
+#file_name = "DCB-sh giant clean primaryschool non-coop 0.000250.txt"
+
+#file_name = "DCB-sh clean sociopattern_conference_contact non-coop 0.0100.txt"
+#file_name = "D-sh clean sociopattern_conference_contact non-coop 0.0100.txt"
+#file_name = "clean sociopattern_hospital 0.0100.txt"
+
+
+#file_name = "DCWB-sh clean sociopattern_hospital.txt  non-coop 0.06 1624215451-data.txt"
 #file_name = "clean sociopattern_conference_contact.txt 0.06 1395082371-data.txt"
+#file_name = "DCB-sh giant clean primaryschool 0.0200.txt"
+#file_name = "SOU-sh giant clean primaryschool 0.000250.txt"
+#file_name = "SOU-sh giant clean primaryschool 0.000250.txt"
+
 second_dir = ""
 second_file_name = ""
 
@@ -69,6 +90,9 @@ with open(file_dir + file_name, 'r') as f:
     pd_data = pd.read_csv(f)
 
 data_type = data_type.replace('_', '')
+data_type = data_type.replace('.txt', '')
+data_type = data_type.replace('giant ', '')
+#data_type = data_type.replace('clean ', '')
 if ( 'non-coop' in str(f) ):
     qrange = prange
 data = np.array(pd_data)

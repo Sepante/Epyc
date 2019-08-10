@@ -19,7 +19,7 @@ for root, dirs, files in os.walk(path):
                 _, pdata = pdata.split('non-coop ')
             pdata = float(pdata)
             print(fileInfo)
-            pdata = "{0:.4f}".format(pdata)
+            pdata = "{0:.6f}".format(pdata)
             print(pdata)
             if not os.path.exists(root+cooperation+pdata): #creating the subirectory if doesn't exits.
                 os.makedirs(root+cooperation+pdata)

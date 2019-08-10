@@ -9,11 +9,17 @@ int Person::supplierNum = 0;
 int Person::demanderNum = 0;
 
 std::random_device randomSeed;
-std::default_random_engine gen( randomSeed( ) );
+std::default_random_engine gene( randomSeed( ) );
+float gen = 2000;
 //std::normal_distribution<float> gaussian(1,2);
 //std::exponential_distribution<float> expon(0);
-std::normal_distribution<float> expon(3 * 24 * 3600, 1 * 24 * 3600);
+//std::normal_distribution<float> expon(3 * 24 * 3600, 1 * 24 * 3600);
 //std::exponential_distribution<double> expon( 1/(20000) );
+
+float expon(float gen)
+{
+	return gen;
+}
 
 //Person::exp(1);
 //gaussian agg;
@@ -134,6 +140,7 @@ void Person::turn_I(Transfer supply, int t) // transfers diseases, using chances
 						{
 							recoveryTime[0] = t + expon(gen);
 							recoveryTime[1] = t + expon(gen);
+							//std::cout << "recov time" << recoveryTime[0] << '\n';
 						}
 
 					}
@@ -220,12 +227,15 @@ void Person::set_seed(Transfer dis) // has to be modified for the instance
 		//else if(dis_one)
 		//a_cluster_ ++;
 	}
+	//std::cout << "r time: " << recoveryTime[0] << '\n';
 }
 
 void Person::reEvaluateSeed(int t)
 {
-	recoveryTime[0] = t + expon(gen);
-	recoveryTime[1] = t + expon(gen);
+	//recoveryTime[0] = t + expon(gen);
+	//recoveryTime[1] = t + expon(gen);
+	recoveryTime[0] += t;
+	recoveryTime[1] += t;
 }
 
 
