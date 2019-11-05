@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 from data_reader import *
+
+matplotlib.rcParams.update({'font.size': 15})
+
 
 #from data_reader import datareader
 #import data_reader
@@ -10,10 +14,16 @@ name_string = "$normal$, " + dis_type + ", " + data_type + ", $n=$" + str(nrange
 #n=243
 opacity_num = 0.5
 
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+
 #for pindex in range(p_size):
     #for qindex in range(q_size):
-for pindex in [-1]:
+for pindex in [0, 10, 20, 30, 40, 50, 59]:
     for qindex in [-1]:
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
+        
         
         current_data = data[pindex, qindex, :]
         
@@ -33,7 +43,8 @@ for pindex in [-1]:
         widths = np.diff(bins)
         hist = hist / (runNum)
         hist = hist / widths[0]
-        plt.bar(bins[:-1], hist, widths,  color = 'g', alpha = 1, ec='black')
+        #plt.bar(bins[:-1], hist, widths,  color = 'orange', alpha = 1, ec='black')
+        plt.fill(hist, bins[:-1], color = 'orange')
         #plt.show()
         
         
@@ -59,21 +70,32 @@ for pindex in [-1]:
         """
 
         
-        plt.suptitle(name_string)
-        plt.xlabel('$mass$')
-        plt.ylabel('$P(m)$')
-
+        #ax.set_title(name_string)
+        ax.set_ylabel('$ \\rho_{ab} $')
+        ax.set_xlabel('$\Pi( \\rho_{ab} )$')
         name_string = name_string.replace('$','')
-        plt.ylim([0,0.06])
-        plt.xlim([0,n])
         
+        ax.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+        ax.yaxis.major.formatter._useMathText = True
+
+        ax.ticklabel_format(axis='x', style='sci', scilimits=(0,0))
+        ax.xaxis.major.formatter._useMathText = True
+
+        #ax.set_aspect('equal')9
+        #plt.ylim([0,0.06])
+        #plt.xlim([10,n])
+        ax.set_ylim([17, n])
+        ax.set_xlim([0, 0.015])
+        ax.set_aspect(1/ax.get_data_ratio())
+        
+        fig.savefig('hist-'+str(prange[pindex]).replace('.','')+'.png', dpi = 300, bbox_inches='tight')
         #plt.savefig(location+name_string+".png" , bbox_inches='tight')
         plt.show()
 
 pd_data = pd.DataFrame()
 pd_data[data_type] = hist
-pd_data.to_csv( location + "hist compare/" + name_string+".hist", header = True , index = None , sep = ',' )
-print(data_type)
+#pd_data.to_csv( location + "hist compare/" + name_string+".hist", header = True , index = None , sep = ',' )
+#print(data_type)
 
 #with open(location + name_string+".hist", 'w') as f:
      
