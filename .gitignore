@@ -71,3 +71,4 @@ trial.py
 *.pyc
 *.csv
 *.tex
+*.hist
