@@ -30,5 +30,5 @@ extern Network society;
 void cons_Erdos(int n);
 void cons_grid(int n);
 void cons_grid3D(int n);
-
+void cons_stochastic_block_network(int n, float disparity_prob);
 #endif
