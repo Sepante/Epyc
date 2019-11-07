@@ -41,7 +41,7 @@ std::string inputFileName = "SOU-sh giant clean primaryschool.txt";
 
 int seed;
 //distr.param(std::uniform_int_distribution<int>::param_type(5, 13));
-//enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4};
+//enum Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4, static_from_file = 5, stochastic_block_network = 6};
 const bool manual_cooperativity_input = false;
 bool cooperate = true;
 enum Disease_Type { single = 1, coinfection = 2 } ;
@@ -49,7 +49,7 @@ enum Reshuffle { no_shuffle = 0, erdos_reshuffle = 1, grid_reshuffle = 2 } ;
 //Reshuffle burst_reshuffle = grid_reshuffle;
 const Reshuffle burst_reshuffle = no_shuffle;
 const bool grid_output_on = false;
-const bool timed_output_on = true;
+const bool timed_output_on = false;
 const bool manual_user_input = true;
 const bool manual_file_input = false;
 const bool manual_step_size_input = false;
@@ -70,7 +70,7 @@ const Disease_Type disT = coinfection;
 
 //Graph_Type graphT = static_from_file;
 //Graph_Type graphT = from_file;
-Graph_Type graphT = from_file;
+Graph_Type graphT = stochastic_block_network;
 
 const int row_count = 0;
 int edge_num;
@@ -92,7 +92,7 @@ float rambda;
 float percol_prob = 0;
 std::set <int> actives={};
 //int run, runNum = 1;
-int run, runNum = 10;
+int run, runNum = 1;
 
 int time_step_size = 20; //for the hospital, it has been held = 20 by others.//for brazil, it's 1.//for email: 40 //for FilmMessages: 5000
 //int time_step_size = 1; //for the hospital, it has been held = 20 by others.//for brazil, it's 1.//for email: 40 //for FilmMessages: 5000
@@ -341,7 +341,7 @@ int main()
 	//std::cout << "number of seeds: " << seedsNum << '\n';
 
 	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
-	std::vector<int> n_set={75};
+	std::vector<int> n_set={20};
 	std::vector<float> p_set={0.1, 0.15, 0.17, 0.19, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9};
 	//std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
@@ -466,6 +466,8 @@ int main()
 		//fout<<"$3D-grid$\n";
 		graphType = "grid3D";
 		//file_name.append("grid3D, ");
+		case stochastic_block_network:
+		graphType = "stochastic_block_network";
 		break;
 		case from_file:
 		case static_from_file:
@@ -527,6 +529,11 @@ int main()
 		else if (graphT == grid3D)
 		{
 			cons_grid3D(vert_num);
+		}
+		else if (graphT == stochastic_block_network)
+		{
+			cons_stochastic_block_network(vert_num, - 0.5);
+			print_graph(society);
 		}
     else if (graphT == from_file)
     {
