@@ -72,3 +72,4 @@ trial.py
 *.csv
 *.tex
 *.hist
+*/Legacy*
