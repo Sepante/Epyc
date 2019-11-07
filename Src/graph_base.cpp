@@ -53,8 +53,8 @@ void cons_grid3D(int n)
 void cons_stochastic_block_network(int n, float disparity_prob)
 {
 	float cnct_prob = (float)4/(float)n;
-	float same_block_prob = cnct_prob * ( 1 + disparity_prob )
-	float other_block_prob = cnct_prob * ( 1 - disparity_prob )
+	float same_block_prob = cnct_prob * ( 1 + disparity_prob );
+	float other_block_prob = cnct_prob * ( 1 - disparity_prob );
 
 	society.clear();
 	//society(32);
@@ -80,7 +80,7 @@ void cons_stochastic_block_network(int n, float disparity_prob)
 					//add_edge(j, i, society);
 				}
 			else
-				if ( dice(same_block_prob) )
+				if ( dice(other_block_prob) )
 				{
 					add_edge(i, j, society);
 				}
@@ -88,4 +88,5 @@ void cons_stochastic_block_network(int n, float disparity_prob)
 		}
 	}
 	//std::cout << "Erdos running" << '\n';
+	//print_graph(society);
 }
