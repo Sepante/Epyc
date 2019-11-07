@@ -18,6 +18,15 @@ void terminal_output(Graph_Type graphT, int run, int last_time_step)
 	{
 		std::cout << "file: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run <<", last_time_step: " << last_time_step << '\n';
 	}
+	else if(graphT == stochastic_block_network)
+	{
+		std::cout << "stochastic_block_network: " << "n: " << num_vertices(society) << ", p: " << p << ", q: " << q << ", r: " << r << ", run: " << run << std::endl;
+	}
+	else
+	{
+				std::cout << "network type not supported by terminal_output!";
+	}
+
 	//cluster_size();
 	//cout << (a_cluster + b_cluster + ab_cluster) << '\n';
 }
