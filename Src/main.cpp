@@ -71,6 +71,8 @@ const Disease_Type disT = coinfection;
 //Graph_Type graphT = static_from_file;
 //Graph_Type graphT = from_file;
 Graph_Type graphT = stochastic_block_network;
+//Graph_Type graphT = erdos;
+
 
 const int row_count = 0;
 int edge_num;
@@ -331,8 +333,47 @@ namespace patch
 }
 
 
+void cons_graph(Graph_Type graphT, int vert_num)
+{
+	if (graphT == erdos)
+	{
+		cons_Erdos(vert_num);
+	}
+	else if (graphT == grid)
+	{
+		cons_grid(vert_num);
+	}
+	else if (graphT == grid3D)
+	{
+		cons_grid3D(vert_num);
+	}
+	else if (graphT == stochastic_block_network)
+	{
+		cons_stochastic_block_network(vert_num, - 0.5);
+	}
+	else if (graphT == from_file)
+	{
+		//n_set[0] = readFile(0);
+		vert_num = readFile(0);
+		Person::demanderNum = vert_num;
+	}
+	else if( graphT == static_from_file )
+	{
+		//n_set[0] = cons_static();
+		//vert_num = n_set[0];
+		vert_num = cons_static();
+		Person::demanderNum = vert_num;
+		//std::cout << "dd: " << Person::demanderNum << '\n';
+	}
+
+}
+
 int main()
 {
+	bool graphIsRandom = false;
+	//Graph_Type { erdos = 1, grid = 2, grid3D = 3, from_file = 4, static_from_file = 5, stochastic_block_network = 6};
+	if (graphT == erdos || graphT == stochastic_block_network)
+		graphIsRandom = true;
 	//std::vector<int> x(10);
 	//std::iota(std::begin(x), std::end(x), 0); //0 is the starting number
 	//for( Vertex vd : make_iterator_range( x ) )
@@ -341,7 +382,7 @@ int main()
 	//std::cout << "number of seeds: " << seedsNum << '\n';
 
 	//std::vector<int> n_set={128, 256, 512,1024, 2048, 4096, 8192, 16384};
-	std::vector<int> n_set={20};
+	std::vector<int> n_set={10};
 	std::vector<float> p_set={0.1, 0.15, 0.17, 0.19, 0.2, 0.225, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.8, 0.9};
 	//std::vector<float> p_set={0.8, 0.9, 1};
 	std::vector<float> q_set={0.1 ,0.5, 0.8, 1};
@@ -466,6 +507,7 @@ int main()
 		//fout<<"$3D-grid$\n";
 		graphType = "grid3D";
 		//file_name.append("grid3D, ");
+		break;
 		case stochastic_block_network:
 		graphType = "stochastic_block_network";
 		break;
@@ -512,46 +554,19 @@ int main()
 
 	//for(int nindex=0; nindex<n_set.size(); nindex++)
 	int nindex = 0;
-	vert_num = readFile(0);
+	//vert_num = readFile(0);
 	//std::cout << "vert_num: " << vert_num << '\n';
 	//for(seed = 0 ; seed <= vert_num - 1; seed ++)
 	{
-		//std::cout << "who's counting me?" << '\n';
-		vert_num = n_set[nindex];
-		if (graphT == erdos)
-		{
-			cons_Erdos(vert_num);
-		}
-		else if (graphT == grid)
-		{
-			cons_grid(vert_num);
-		}
-		else if (graphT == grid3D)
-		{
-			cons_grid3D(vert_num);
-		}
-		else if (graphT == stochastic_block_network)
-		{
-			cons_stochastic_block_network(vert_num, - 0.5);
-			print_graph(society);
-		}
-    else if (graphT == from_file)
-    {
-      n_set[0] = readFile(0);
-      Person::demanderNum = vert_num;
-    }
-		else if( graphT == static_from_file )
-		{
-			n_set[0] = cons_static();
-			vert_num = n_set[0];
-			Person::demanderNum = vert_num;
-			//std::cout << "dd: " << Person::demanderNum << '\n';
-		}
 
+		vert_num = n_set[nindex];
+
+		cons_graph( graphT, vert_num);
 		//if(seed == 0 )//freaking temporal
 		{
 		for(int nindex=0; nindex<=n_set.size()-1; nindex++)
-		fout<<n_set[nindex]<<"\n";
+		//fout<<n_set[nindex]<<"\n";
+		fout<<vert_num<<"\n";
 		for(int pindex=0; pindex<=p_set.size()-1; pindex++)
 		fout<<p_set[pindex]<<"\n";
 		for(int qindex=0; qindex<=q_set.size()-1; qindex++)
@@ -583,6 +598,9 @@ int main()
         */
 				for (run = 0; run < runNum; run++)
 				{
+					if (graphIsRandom)
+						cons_graph(graphT, vert_num);
+					print_graph(society);
 					init_states(seedsNum);
 					//for (size_t t = starting_time; t <= 100000000 && actives.size() >= 1 ; t += time_step_size)
 
@@ -769,7 +787,7 @@ int main()
 					//last_time_min = fmin( last_time_min, last_time );
 					if(grid_output_on)
 						grid_output(vert_num, animout);
-					if(run % 100 == 0)
+					if(run % 1 == 0)
 					{
 						//temporal!!!!
 						if (burst_reshuffle == grid_reshuffle)
