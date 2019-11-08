@@ -337,7 +337,7 @@ void cons_graph(Graph_Type graphT, int vert_num)
 {
 	if (graphT == erdos)
 	{
-		cons_Erdos(vert_num);
+		cons_Erdos(vert_num, mean_degree);
 	}
 	else if (graphT == grid)
 	{
@@ -349,7 +349,7 @@ void cons_graph(Graph_Type graphT, int vert_num)
 	}
 	else if (graphT == stochastic_block_network)
 	{
-		cons_stochastic_block_network(vert_num, - 0.5);
+		cons_stochastic_block_network(vert_num, mean_degree, disparity);
 	}
 	else if (graphT == from_file)
 	{
@@ -471,6 +471,17 @@ int main()
 		std::cout << "enter the step size: ";
 		std::cin >> time_step_size;
 	}
+	if (manual_disparity_input)
+	{
+		std::cout << "enter the disparty: ";
+		std::cin >> disparity;
+	}
+	if (manual_degree_input)
+	{
+		std::cout << "enter the degree: ";
+		std::cin >> mean_degree;
+	}
+
 
 
 

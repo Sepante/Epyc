@@ -1,8 +1,8 @@
 #include "graph_base.h"
 
-void cons_Erdos(int n)
+void cons_Erdos(int n, float mean_degree)
 {
-	float cnct_prob = (float)4/(float)n;
+	float cnct_prob = (float)mean_degree/(float)n;
 	society.clear();
 	//society(32);
 	for (size_t i = 0; i < n; i++)
@@ -50,9 +50,10 @@ void cons_grid3D(int n)
 	}
 }
 
-void cons_stochastic_block_network(int n, float disparity_prob)
+void cons_stochastic_block_network(int n, float mean_degree, float disparity_prob)
 {
-	float cnct_prob = (float)4/(float)n;
+	//float cnct_prob = (float)4/(float)n;
+	float cnct_prob = (float)mean_degree/(float)n;
 	float same_block_prob = cnct_prob * ( 1 + disparity_prob );
 	float other_block_prob = cnct_prob * ( 1 - disparity_prob );
 
@@ -74,11 +75,13 @@ void cons_stochastic_block_network(int n, float disparity_prob)
 			else
 			j_block = 1;
 			if (i_block == j_block)
+			{
 				if ( dice(same_block_prob) )
 				{
 					add_edge(i, j, society);
 					//add_edge(j, i, society);
 				}
+			}
 			else
 				if ( dice(other_block_prob) )
 				{
