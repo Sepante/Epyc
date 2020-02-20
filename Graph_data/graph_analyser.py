@@ -32,9 +32,11 @@ def Burst(i_t_times):
 #file = "giant clean brazil.txt"
 #filedir = "network data/shuffled/SOU/"
 
+#filedir = "network data/giant/"
 filedir = "network data/clean/"
 #file = "clean sociopattern_hospital.txt"
 #file = "giant clean primaryschool.txt"
+num_fig = 1
 file = "clean sociopattern_conference_contact.txt"
 
 fullfile = filedir + file
@@ -96,6 +98,16 @@ file = file.replace('_', '')
 file = file.replace('.txt', '')
 file = file.replace(' ', '')
 #data_type = data_type.replace('giant ', '')
+import string
+ax.xaxis.major.formatter._useMathText = True
+text = string.ascii_lowercase[num_fig] + ')'
+#ax[j].grid()
+ax.get_yaxis().get_offset_text().set_position((0,0))
+ax.text(0.04, 0.9,text,
+ horizontalalignment='center',
+ verticalalignment='center',
+ transform = ax.transAxes)
+
 
 
 fig.savefig("contactnum-"+file+ "-ab" +".png" ,dpi = 300, bbox_inches='tight')
