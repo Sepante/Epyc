@@ -15,12 +15,18 @@ from sklearn import metrics
 
 import os
 import pandas as pd
+
+
+
+non_coop = True
+
 location = "../Results/"
 FullLoc = location + "KMeansClustering/"
 
-dataType = "sociopatternhospital.txt"
-#dataType = "sociopatternconferencecontact.txt"
-#dataType = "primaryschool"
+#dataType = "sociopatternhospital"
+#dataType = "sociopatternconferencecontact"
+
+dataType = "primaryschool"
 
 matplotlib.rcParams.update({'font.size': 15})
 
@@ -28,11 +34,22 @@ fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
 
-file_name = FullLoc + dataType +"giant-cluster-ave.csv"
+cooperativity = ''
+if non_coop:
+    cooperativity = 'non-coop-'
+
+
+file_name = FullLoc + cooperativity + dataType + "giant-cluster-ave.csv"
+
+
+
+
+print(file_name)
+
 with open(file_name) as f:
     KMeanResults = pd.read_csv(f, index_col = 0)
     #KMeanResults = KMeanResults.transpose()
-prange = [ float(p) for p in KMeanResults.columns  ]
+prange = [ float(p) for p in KMeanResults.columns  ]    
 for i in range( len(KMeanResults) ):
     label = KMeanResults.iloc[i].name
 
@@ -58,15 +75,21 @@ ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,ncol=2, mode="expand", bord
 ax.set_xlabel('$p$')
 #plt.ylabel('$giant$ $cluster$ $ab$, $mean$')
 ax.set_ylabel( '$\\widebar{ab}$' )
+ax.set_xlim(0.003, prange[-1])
+#ax.set_xlim(0.02, 0.069)
 ax.grid()
-fig.savefig(FullLoc + dataType.replace('.txt','') + "giantclusterabmean.png" , dpi = 300, bbox_inches='tight')
+fig.savefig(FullLoc + cooperativity + dataType.replace('.txt','') + "giantclusterabmean.png" , dpi = 300, bbox_inches='tight')
 #fig.show()
 plt.show()
 
 fig2 = plt.figure()
 ax = fig2.add_subplot(1,1,1)
 
-file_name = FullLoc + dataType +"giant-cluster-instances.csv"
+file_name = FullLoc + cooperativity + dataType +"giant-cluster-instances.csv"
+
+print(file_name)
+
+
 with open(file_name) as f:
     KMeanResults = pd.read_csv(f, index_col = 0)
     #KMeanResults = KMeanResults.transpose()
@@ -97,7 +120,10 @@ ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,ncol=2, mode="expand", bord
 ax.set_xlabel('$p$')
 #plt.ylabel('$outbreak$ $probability$')
 ax.set_ylabel('$P_{ab}$')
+ax.set_xlim(0.003, prange[-1])
+#ax.set_xlim(0.02, 0.069)
+
 ax.grid()
 
-fig2.savefig(FullLoc + dataType.replace('.txt','') + "outbreakprobability.png" , dpi = 300, bbox_inches='tight')
+fig2.savefig(FullLoc + cooperativity + dataType.replace('.txt','') + "outbreakprobability.png" , dpi = 300, bbox_inches='tight')
 #plt.show()
