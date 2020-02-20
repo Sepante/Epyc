@@ -3,6 +3,8 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
+import matplotlib
+
 from sklearn import cluster, datasets
 from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import StandardScaler
@@ -14,8 +16,11 @@ from sklearn import metrics
 
 import os
 
+n = nrange[nindex]
 
-scatter_plot = False
+matplotlib.rcParams.update({'font.size': 15})
+
+scatter_plot = True
 distances_plot = False
 store_on_file = False
 #np.random.seed(0)
@@ -33,16 +38,20 @@ pStep = 1
 
 #tempIndicies = range( len(data) )[::pStep]
 
-tempdata = data[::pStep, -1]
-tempprange = prange[::pStep]
+#tempdata = data[::pStep, -1]
+#tempprange = prange[::pStep]
 
+tempdata = data[-1]
+tempprange = [prange[-1]]
 distances = np.zeros( len(tempdata) )
 max_centers = np.zeros( len(tempdata) )
 max_center_sizes = np.zeros( len(tempdata) )
 
+instance_step = 1
 instance_step = 10
 
 for ptempindex, p in enumerate( tempprange ):
+    print(p)
     
     X1 = tempdata[ptempindex, ::instance_step, 0]
     X2 = tempdata[ptempindex, ::instance_step, 1]
@@ -110,24 +119,42 @@ for ptempindex, p in enumerate( tempprange ):
 
             if scatter_plot:
                 # plot
-                plt.subplot(3, len(clustering_algorithms), plot_num)
+                fig = plt.figure()
+                ax = fig.add_subplot(1,1,1)
+                ax.set_aspect(1)
+
+                #ax.subplot(3, len(clustering_algorithms), plot_num)
                 #if i_dataset == 0:
                     
         
                 name_string = name+"clustering for $a$ and $ab$ values, \n"+ dis_type + ", " + data_type + "\n" +", $n=$" + str(nrange[nindex]) + ", $p=$" + str( p )+ ", $q=$" + qtext + ", $r=$" + str(rrange[rindex])
-                plt.title(name_string)
-                plt.scatter(origX[:, 0], origX[:, 1], color=colors[y_pred].tolist(), s=25, alpha = 0.1)
-                #plt.ylim([0, 75])
-                #plt.ylim([0, 75])
-                #plt.scatter(X1, X2, color=colors[y_pred].tolist(), s=10, alpha = 0.2)
+                #ax.set_title(name_string)
+                ax.scatter(origX[:, 0] / n, origX[:, 1] / n, color=colors[y_pred].tolist(), s=25, alpha = 0.1)
                 
-                plt.xlabel('$ a( \infty$ )')
-                plt.ylabel('$ ab( \infty$ )')
+         #       plt.ylim([0, 1])
+        #        plt.ylim([0, 1])
+                #ax.set_ylim([0, 1])
+                #ax.set_xlim([0, 1])
+
+                #plt.scatter(X1, X2, color=colors[y_pred].tolist(), s=10, alpha = 0.2)
+                ax.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+                ax.yaxis.major.formatter._useMathText = True
+
+                ax.ticklabel_format(axis='x', style='sci', scilimits=(0,0))
+                ax.xaxis.major.formatter._useMathText = True
+
+                
+                #plt.xlabel('$ a( \infty$ )')
+                #plt.ylabel('$ ab( \infty$ )')
+                ax.set_xlabel('$a$')
+                ax.set_ylabel('$ab$')
         
                 plot_num += 1
-    if scatter_plot:
-        plt.savefig(location+"clustering/"+name_string+".png" , dpi = 300, bbox_inches='tight')
-        plt.show()
+                fig.savefig(location+"clustering/"+name_string+".png" , dpi = 500, bbox_inches='tight')
+                plt.show()
+    #if scatter_plot:
+        #fig.savefig(location+"clustering/"+name_string+".png" , dpi = 300, bbox_inches='tight')
+        #plt.show()
     centers = ( scaler.inverse_transform( KMeans.cluster_centers_  ))
     max_center_id = centers[:,0].argmax()
     max_center = centers[ max_center_id ]
@@ -240,50 +267,58 @@ if distances_plot:
 
 
 if store_on_file:
-    shuffle_type , file_name = data_type.split('clean ') 
+    shuffle_type , output_file_name = data_type.split('clean ') 
     shuffle_type = shuffle_type.replace('$', '')
     shuffle_type = shuffle_type + 'clean'
-    file_name = location + "KMeansClustering/" + file_name.replace('$', '') + "giant-cluster-ave.csv"
+    if 'non-coop' in file_name:
+        output_file_name = 'non-coop-'+output_file_name
+    output_file_name = location + "KMeansClustering/primary-new-hq-coop/" + output_file_name.replace('$', '') + "giant-cluster-ave.csv"
     tempprange = np.array(tempprange)
 
 
-    with open(file_name, "a") as f:
+    with open(output_file_name, "a") as f:
         DF = pd.DataFrame([max_centers] , index = [shuffle_type], columns = tempprange)
-        file_empty = (os.stat(file_name).st_size == 0)
+        file_empty = (os.stat(output_file_name).st_size == 0)
         if file_empty:
             DF.to_csv(f)
         else:
             DF.to_csv(f, header = False)
     
     
-    shuffle_type , file_name = data_type.split('clean ') 
+    shuffle_type , output_file_name = data_type.split('clean ') 
     shuffle_type = shuffle_type.replace('$', '')
     shuffle_type = shuffle_type + 'clean'
-    file_name = location + "KMeansClustering/" + file_name.replace('$', '') + "giant-cluster-instances.csv"
+    if 'non-coop' in file_name:
+        output_file_name = 'non-coop-'+output_file_name
+    output_file_name = location + "KMeansClustering/primary-new-hq-coop/" + output_file_name.replace('$', '') + "giant-cluster-instances.csv"
+    
+
     tempprange = np.array(tempprange)
     
     
     
     
-    with open(file_name, "a") as f:
+    with open(output_file_name, "a") as f:
         DF = pd.DataFrame([max_center_sizes] , index = [shuffle_type], columns = tempprange)
-        file_empty = (os.stat(file_name).st_size == 0)
+        file_empty = (os.stat(output_file_name).st_size == 0)
         if file_empty:
             DF.to_csv(f)
         else:
             DF.to_csv(f, header = False)
 
-
-shuffle_type , file_name = data_type.split('clean ') 
+"""
+shuffle_type , output_file_name = data_type.split('clean ') 
 shuffle_type = shuffle_type.replace('$', '')
 shuffle_type = shuffle_type + 'clean'
-file_name = location + "KMeansClustering/" + file_name.replace('$', '') + "outbreakP.csv"
+output_file_name = location + "KMeansClustering/" + output_file_name.replace('$', '') + "outbreakP.csv"
+ 
 #with open(file_name, "a") as f:
-with open(file_name, "a") as f:
+with open(output_file_name, "a") as f:
     DF = pd.DataFrame([distances] , index = [shuffle_type], columns = tempprange)
-    file_empty = (os.stat(file_name).st_size == 0)
+    file_empty = (os.stat(output_file_name).st_size == 0)
     if file_empty:
         DF.to_csv(f)
     else:
         DF.to_csv(f, header = False)
 
+"""
