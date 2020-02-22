@@ -5,11 +5,15 @@ The main simulating engine is writeen in C++, and the visualizing scripts are wr
 <h1 align="center">
 	<br>
 	<img width="200" src="Model Illustration/SID-SID.png" alt="Bucket">
-	<br>
-	<br>
-	<br>
-</h1>
+  <img width="220" src="Model Illustration/SIS-SIR.png" alt="Bucket" style = "margin:10000px" >
+  <img width="200" style = "margin:10000px" src="Model Illustration/SIS-SID.png" alt="Bucket">
 
+<br>
+<br>
+
+<br>
+Three types of coinfective spreading models.
+</h1>
 
 ### Prerequisites
 
